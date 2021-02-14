@@ -5,15 +5,29 @@
  */
 package vistas;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import javax.swing.filechooser.FileFilter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import modelos.FileTypeFilter;
+
 /**
  *
  * @author Jeffry
  */
 public class Menu extends javax.swing.JFrame {
 
-    /**
-     * Creates new form NewJFrame
-     */
+    String nombreArchivo;
+    String pathArchivo;
+
     public Menu() {
         initComponents();
     }
@@ -29,7 +43,7 @@ public class Menu extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtEntrada = new javax.swing.JTextArea();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -56,19 +70,19 @@ public class Menu extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        btnNuevoArchivo = new javax.swing.JMenuItem();
+        btnAbrirArchivo = new javax.swing.JMenuItem();
+        btnGuardar = new javax.swing.JMenuItem();
+        btnGuardarComo = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Archivo de entrada");
 
-        jTextArea1.setEditable(false);
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txtEntrada.setEditable(false);
+        txtEntrada.setColumns(20);
+        txtEntrada.setRows(5);
+        jScrollPane1.setViewportView(txtEntrada);
 
         jButton2.setText("Generar Automatas");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -192,17 +206,37 @@ public class Menu extends javax.swing.JFrame {
 
         jMenu1.setText("Archivo");
 
-        jMenuItem1.setText("Abrir");
-        jMenu1.add(jMenuItem1);
+        btnNuevoArchivo.setText("Nuevo Archivo");
+        btnNuevoArchivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoArchivoActionPerformed(evt);
+            }
+        });
+        jMenu1.add(btnNuevoArchivo);
 
-        jMenuItem2.setText("Guardar");
-        jMenu1.add(jMenuItem2);
+        btnAbrirArchivo.setText("Abrir Archivo");
+        btnAbrirArchivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAbrirArchivoActionPerformed(evt);
+            }
+        });
+        jMenu1.add(btnAbrirArchivo);
 
-        jMenuItem3.setText("Guardar como....");
-        jMenu1.add(jMenuItem3);
+        btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+        jMenu1.add(btnGuardar);
 
-        jMenuItem4.setText("Generar XML de Salida");
-        jMenu1.add(jMenuItem4);
+        btnGuardarComo.setText("Guardar como....");
+        btnGuardarComo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarComoActionPerformed(evt);
+            }
+        });
+        jMenu1.add(btnGuardarComo);
 
         jMenuBar1.add(jMenu1);
 
@@ -292,7 +326,95 @@ public class Menu extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void btnNuevoArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoArchivoActionPerformed
+        String numRandom = String.valueOf(new Random().nextInt(100));
+        pathArchivo = System.getProperty("user.dir") + "/archivos/";
+        nombreArchivo = "newRegex" + numRandom + ".olc";
+        File nuevoArchivo = new File(pathArchivo + nombreArchivo);
+        try {
+            if (nuevoArchivo.createNewFile()) {
+                txtEntrada.setEditable(true);
+                this.setTitle("Regexive - " + nombreArchivo);
+                JOptionPane.showMessageDialog(null, "Archivo creado:  " + nombreArchivo + "\nSe habilito la entrada de texto");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error en la creación (permisos)");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }     
+    }//GEN-LAST:event_btnNuevoArchivoActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        try {
+            FileWriter writer;
+            writer = new FileWriter(pathArchivo + nombreArchivo);
+            writer.write(txtEntrada.getText());
+            writer.close();
+            JOptionPane.showMessageDialog(null, "Archivo guardado exitosamente");
+        } catch (IOException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnGuardarComoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarComoActionPerformed
+        // Elegir nuevo nombre
+        nombreArchivo = JOptionPane.showInputDialog("Escribe el nuevo nombre del archivo") + ".olc";
+        File nuevoArchivo = new File(pathArchivo + nombreArchivo);
+        try {
+            if (nuevoArchivo.createNewFile()) {
+                // Guardar en el los nuevos cambios
+                FileWriter writer;
+                writer = new FileWriter(pathArchivo + nombreArchivo);
+                writer.write(txtEntrada.getText());
+                writer.close();
+                
+                this.setTitle("Regexive - " + nombreArchivo);
+                JOptionPane.showMessageDialog(null, "El archivo ha sido guardado con otro nombre");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error en la creación (permisos)");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }   
+    }//GEN-LAST:event_btnGuardarComoActionPerformed
+
+    private void btnAbrirArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirArchivoActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setMultiSelectionEnabled(false);
+        FileFilter olcFiltrer = new FileTypeFilter(".olc", "Files OLC");
+        fileChooser.setFileFilter(olcFiltrer);
+        
+        if(fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+            try {
+                File archivo =  fileChooser.getSelectedFile();
+                
+                Scanner myReader = new Scanner(archivo);
+                String contenido = "";
+                while (myReader.hasNextLine()) {
+                    contenido += myReader.nextLine() + "\n";    
+                }
+                myReader.close();
+                
+                nombreArchivo = archivo.getName();
+                pathArchivo = archivo.getAbsolutePath().replace(nombreArchivo, "");
+                txtEntrada.setText(contenido);
+                txtEntrada.setEditable(true);
+                this.setTitle("Regexive - " + nombreArchivo);
+
+                System.out.println(nombreArchivo);
+                System.out.println(pathArchivo);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnAbrirArchivoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem btnAbrirArchivo;
+    private javax.swing.JMenuItem btnGuardar;
+    private javax.swing.JMenuItem btnGuardarComo;
+    private javax.swing.JMenuItem btnNuevoArchivo;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -312,10 +434,6 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JList<String> jList4;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -324,7 +442,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTextArea txtEntrada;
     // End of variables declaration//GEN-END:variables
 }

@@ -19,6 +19,7 @@ public class Regexive {
     public static void main(String[] args) {
         // TODO code application logic here
         menu_principal = new Menu();
+        menu_principal.setTitle("Regexive");
         menu_principal.setVisible(true);
     }
     
