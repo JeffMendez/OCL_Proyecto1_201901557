@@ -5,11 +5,15 @@
  */
 package vistas;
 
+import analizadores.Lexico;
+import analizadores.Sintactico;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import javax.swing.filechooser.FileFilter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -18,6 +22,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import modelos.FileTypeFilter;
+import regexive.Regexive;
 
 /**
  *
@@ -30,6 +35,26 @@ public class Menu extends javax.swing.JFrame {
 
     public Menu() {
         initComponents();
+        
+        txtEntrada.setText("{\n" +
+        "\n" +
+        "////// CONJUNTOS\n" +
+        "CONJ: letra -> a~z;\n" +
+        "CONJ: digito -> 0~9;\n" +
+        "CONJ: vocales -> a,e,i,o,u;\n" +
+        "\n" +
+        "/////// EXPRESIONES REGULARES\n" +
+        "ExpReg1 -> . {letra} * | \"_\" | {letra} {digito}; \n" +
+        "ExpresionReg2 -> . {digito} . \".\" + {digito};\n" +
+        "RegEx3 -> . {digito} * | \"_\" | {letra} {digito};\n" +
+        "\n" +
+        "%%\n" +
+        "%%\n" +
+        "\n" +
+        "ExpReg1 : \"primerLexemaCokoa\"; \n" +
+        "ExpresionReg2 : \"34.44\";\n" +
+        "\n" +
+        "}");
     }
 
     /**
@@ -44,7 +69,7 @@ public class Menu extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtEntrada = new javax.swing.JTextArea();
-        jButton2 = new javax.swing.JButton();
+        btnGenerarAutomata = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -79,15 +104,14 @@ public class Menu extends javax.swing.JFrame {
 
         jLabel1.setText("Archivo de entrada");
 
-        txtEntrada.setEditable(false);
         txtEntrada.setColumns(20);
         txtEntrada.setRows(5);
         jScrollPane1.setViewportView(txtEntrada);
 
-        jButton2.setText("Generar Automatas");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnGenerarAutomata.setText("Generar Automatas");
+        btnGenerarAutomata.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnGenerarAutomataActionPerformed(evt);
             }
         });
 
@@ -253,7 +277,7 @@ public class Menu extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jButton2)
+                                    .addComponent(btnGenerarAutomata)
                                     .addGap(24, 24, 24)
                                     .addComponent(jButton3))
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -289,7 +313,7 @@ public class Menu extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton2)
+                            .addComponent(btnGenerarAutomata)
                             .addComponent(jButton3)))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(4, 4, 4)
@@ -318,9 +342,19 @@ public class Menu extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void btnGenerarAutomataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarAutomataActionPerformed
+        try {
+            System.out.println("Inicio analisis.....");
+            
+            Lexico lexico = new Lexico(new BufferedReader(new StringReader(txtEntrada.getText())));
+            Sintactico sintactico = new Sintactico(lexico);
+            sintactico.parse();
+            
+            System.out.println("Analisis finalizado");
+        } catch (Exception ex) {
+            Logger.getLogger(Regexive.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnGenerarAutomataActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
@@ -412,10 +446,10 @@ public class Menu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem btnAbrirArchivo;
+    private javax.swing.JButton btnGenerarAutomata;
     private javax.swing.JMenuItem btnGuardar;
     private javax.swing.JMenuItem btnGuardarComo;
     private javax.swing.JMenuItem btnNuevoArchivo;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;

@@ -16,14 +16,14 @@ import java_cup.runtime.Symbol;
     yychar = 1; 
 %init} 
 
-digito = [0-9]+
+digito = [0-9]
 letra = [a-zA-ZÑñ]+
 
 blanco = \t|\f|" "|\r|\n
-comentario = "//" [^\r\n]* [^\r\n]
+comentario = "//"[^\r\n]*[^\r\n]
 comentarioMulti = "<!" [^!>] ~ "!>" | "!>" "!"+ "!>"
 
-cadena = [\"] [^\"]*  [\"\n]
+cadena = [\"][^\"]*[\"\n]
 virgu = "~"
 ascii = [!-}]
 id = {letra}({letra}|{digito}|"_")* 

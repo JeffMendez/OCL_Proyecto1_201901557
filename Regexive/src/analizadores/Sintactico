@@ -1,8 +1,14 @@
 package analizadores; 
 import java_cup.runtime.*;
+import java.util.ArrayList; 
+import modelos.ExpresionEvaluar;
+import modelos.Conjunto;
 
 parser code 
 {:
+    public static ArrayList<ExpresionEvaluar> listaExpEvaluar = new ArrayList<ExpresionEvaluar>();
+    public static ArrayList<Conjunto> listaConjuntos = new ArrayList<Conjunto>();
+
     /**
      * Método al que se llama automáticamente ante algún error sintactico.
      **/ 
@@ -31,12 +37,16 @@ terminal String CADENA, virgu, ASCII, ID;
 non terminal INICIO;
 non terminal CONTENIDO, DECLARACIONES, EVALUACIONES;
 non terminal DECLARACION, EVALUACION;
-non terminal LISTACARACTERES;
+non terminal Conjunto LISTACARACTERES;
 non terminal EXPRESION;
 
 start with INICIO; 
 
-INICIO ::= llaveIzq CONTENIDO llaveDer;
+INICIO ::= llaveIzq CONTENIDO llaveDer 
+    {:
+        System.out.println("¡El analisis fue completado!");
+    :}
+;
 
 CONTENIDO ::= DECLARACIONES porcentaje porcentaje porcentaje porcentaje EVALUACIONES;
 
@@ -50,24 +60,83 @@ EVALUACIONES ::=
     | EVALUACION
 ;
 
+EVALUACION ::= 
+    ID:nombre_exp dospuntos CADENA:valor ptcoma 
+    {:
+        ExpresionEvaluar nuevaExpEvaluar = new ExpresionEvaluar(nombre_exp, valor.substring(1,valor.length()-1));
+        listaExpEvaluar.add(nuevaExpEvaluar);
+    :}
+;
+
 DECLARACION ::=
-    CONJ dospuntos ID menos mayor ASCII virgu ASCII ptcoma
-    | CONJ dospuntos ID menos mayor ASCII LISTACARACTERES ptcoma
-    | ID menos mayor EXPRESION ptcoma
+    CONJ dospuntos ID:nombre_conj menos mayor ASCII:a virgu ASCII:b ptcoma 
+    {:
+        Conjunto nuevoConj = new Conjunto(nombre_conj, a, b);
+        listaConjuntos.add(nuevoConj);
+    :}
+    | CONJ dospuntos ID:nombre_conj menos mayor ASCII:a LISTACARACTERES:conjunto ptcoma 
+    {:
+        conjunto.agregarElemento(a);
+        conjunto.setNombre(nombre_conj);
+        listaConjuntos.add(conjunto);
+    :}
+    | ID menos mayor EXPRESION:expr ptcoma {:
+        String expresion = "." + expr + "#";
+        
+        /*ArrayList<node> leaves = new ArrayList();
+        ArrayList<ArrayList> table = new ArrayList();
+        Tree arbol = new Tree(expresion, leaves, table);
+
+        node raiz = arbol.getRoot();
+        raiz.getNode();
+        raiz.follow();
+        
+        followTable ft = new followTable();
+        transitionTable tran = new transitionTable(raiz, table, leaves);*/
+    :}
 ;
 
 LISTACARACTERES ::=
-    LISTACARACTERES coma ASCII
-    | coma ASCII
+    LISTACARACTERES:lista coma ASCII:a 
+    {:
+        lista.agregarElemento(a);
+        RESULT = lista;
+    :}
+    | coma ASCII:a 
+    {:
+        RESULT = new Conjunto();
+        RESULT.agregarElemento(a);
+    :}
 ;
 
 EXPRESION ::=
-    punto EXPRESION EXPRESION
-    | pleca EXPRESION EXPRESION
-    | asterisco EXPRESION
-    | mas EXPRESION
-    | interrogacion EXPRESION
-    | llaveIzq ID llaveDer
-    | CADENA
+    punto EXPRESION:a EXPRESION:b 
+    {:
+        RESULT = "."+a+b;
+    :}
+    | pleca EXPRESION:a EXPRESION:b 
+    {:
+        RESULT = "|"+a+b;
+    :}
+    | asterisco EXPRESION:a 
+    {:
+        RESULT = "*"+a;
+    :}
+    | mas EXPRESION:a 
+    {:
+        RESULT = "+"+a;
+    :}
+    | interrogacion EXPRESION:a 
+    {:
+        RESULT = "?"+a;
+    :}
+    | llaveIzq ID:id llaveDer 
+    {:
+        RESULT = "{" + id + "}";
+    :}
+    | CADENA:a 
+    {:
+        RESULT = a;
+    :}
 ;
 

@@ -5,8 +5,14 @@
  */
 package regexive;
 
+import analizadores.Lexico;
+import analizadores.Sintactico;
+import java.io.BufferedReader;
 import vistas.Menu;
 import java.io.FileInputStream;
+import java.io.StringReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author Jeffry
@@ -22,9 +28,5 @@ public class Regexive {
         menu_principal = new Menu();
         menu_principal.setTitle("Regexive");
         menu_principal.setVisible(true);
-        
-        //interpretar(System.getProperty("user.dir") + "/archivos/ejemExpresion.olc");
     }
-    
- 
 }
