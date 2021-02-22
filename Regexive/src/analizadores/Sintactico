@@ -1,0 +1,73 @@
+package analizadores; 
+import java_cup.runtime.*;
+
+parser code 
+{:
+    /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/ 
+    public void syntax_error(Symbol s){ 
+        System.out.println("Error Sintáctico en la Línea " + (s.left) +
+        " Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
+    } 
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintáctico 
+     * en el que ya no es posible una recuperación de errores.
+     **/ 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        System.out.println("Error síntactico irrecuperable en la Línea " + 
+        (s.left)+ " Columna "+s.right+". Componente " + s.value + 
+        " no reconocido."); 
+    }  
+:} 
+
+terminal String CONJ;
+terminal String ptcoma, dospuntos, menos, mayor, porcentaje;
+terminal String llaveIzq, llaveDer;
+terminal String mas, interrogacion, asterisco, pleca, punto, coma;
+terminal String CADENA, virgu, ASCII, ID;
+
+non terminal INICIO;
+non terminal CONTENIDO, DECLARACIONES, EVALUACIONES;
+non terminal DECLARACION, EVALUACION;
+non terminal LISTACARACTERES;
+non terminal EXPRESION;
+
+start with INICIO; 
+
+INICIO ::= llaveIzq CONTENIDO llaveDer;
+
+CONTENIDO ::= DECLARACIONES porcentaje porcentaje porcentaje porcentaje EVALUACIONES;
+
+DECLARACIONES ::=
+    DECLARACIONES DECLARACION
+    | DECLARACION
+;
+
+EVALUACIONES ::=
+    EVALUACIONES EVALUACION
+    | EVALUACION
+;
+
+DECLARACION ::=
+    CONJ dospuntos ID menos mayor ASCII virgu ASCII ptcoma
+    | CONJ dospuntos ID menos mayor ASCII LISTACARACTERES ptcoma
+    | ID menos mayor EXPRESION ptcoma
+;
+
+LISTACARACTERES ::=
+    LISTACARACTERES coma ASCII
+    | coma ASCII
+;
+
+EXPRESION ::=
+    punto EXPRESION EXPRESION
+    | pleca EXPRESION EXPRESION
+    | asterisco EXPRESION
+    | mas EXPRESION
+    | interrogacion EXPRESION
+    | llaveIzq ID llaveDer
+    | CADENA
+;
+

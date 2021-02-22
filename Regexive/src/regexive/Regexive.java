@@ -6,6 +6,7 @@
 package regexive;
 
 import vistas.Menu;
+import java.io.FileInputStream;
 /**
  *
  * @author Jeffry
@@ -21,6 +22,9 @@ public class Regexive {
         menu_principal = new Menu();
         menu_principal.setTitle("Regexive");
         menu_principal.setVisible(true);
+        
+        //interpretar(System.getProperty("user.dir") + "/archivos/ejemExpresion.olc");
     }
     
+ 
 }
