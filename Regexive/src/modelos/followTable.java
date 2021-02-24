@@ -59,7 +59,7 @@ public class followTable {
         return result;
     }
     
-    public void printTable(ArrayList<ArrayList> table){
+    public void crearGrafoSiguientes(ArrayList<ArrayList> table){
         String dotTable = "digraph T {\n" +
                             "aHtmlTable [\n" +
                             "   shape=plaintext\n" +
@@ -82,8 +82,6 @@ public class followTable {
             
             dotTable += "\t<tr><td>" + valorHoja + "</td><td>" + numeroHoja + "</td><td>" + siguientes + "</td></tr>\n";                                              
             if (numeroHoja > maxHoja) { maxHoja = numeroHoja; }
-        
-            System.out.println(item.get(0) + " - " + item.get(1) + " - " + item.get(2) );
         }
         
         dotTable += "<tr><td>#</td><td>" + (maxHoja+1) + "</td><td>--</td></tr>\t\n" +
@@ -111,6 +109,13 @@ public class followTable {
             
         } catch (IOException ex) {
             Logger.getLogger(transitionTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void printTable(ArrayList<ArrayList> table){ 
+        for (int i=0; i < table.size(); i++) {          
+            ArrayList item = table.get(i);
+            System.out.println(item.get(0) + " - " + item.get(1) + " - " + item.get(2) );
         }
     }
 }

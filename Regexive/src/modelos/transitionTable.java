@@ -107,7 +107,7 @@ public class transitionTable {
         }
     }
     
-    public void crearGrafoTabla() {
+    public void crearGrafoTransiciones() {
         String dotTable = "digraph T {\n" +
                             "aHtmlTable [\n" +
                             "   shape=plaintext\n" +
@@ -156,6 +156,55 @@ public class transitionTable {
             FileWriter writer;
             writer = new FileWriter(pathGrafo + nombreGrafo + ".dot");
             writer.write(dotTable);
+            writer.close();
+            
+            // Crear png
+            String[] cmd = {"dot", "-Tpng", pathGrafo + nombreGrafo + ".dot", "-o", pathGrafo + nombreGrafo + ".png"};
+            Runtime rt = Runtime.getRuntime();
+            rt.exec(cmd);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(transitionTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void crearGrafoAutomata() {
+        String dotAFD = "digraph G {\n";
+                
+        for(ArrayList state : states){
+            
+            ArrayList<Integer> siguientes = (ArrayList<Integer>) state.get(1);
+            boolean aceptacion = (boolean)state.get(3);
+            
+            // Recorrer transiciones
+            for(Object tr : (ArrayList)state.get(2)){
+                transicion t = (transicion) tr;
+              
+                String[] itemsTransicion = t.toString().split("->");
+                String estadoOrigen = itemsTransicion[0].replace(" ", "");
+                String terminal = itemsTransicion[1].replace(" ", "");
+                String estadoDestino = itemsTransicion[2].replace(" ", "");
+                
+                if (terminal.charAt(0) == '{') {
+                    dotAFD += "\t" + estadoOrigen + " -> " + estadoDestino + " [label=\"" + terminal + "\"]";
+                } else {
+                    dotAFD += "\t" + estadoOrigen + " -> " + estadoDestino + " [label=\"" + terminal.substring(1, terminal.length() -1) + "\"]";
+                } 
+            }
+        }
+        
+        dotAFD += "\n" +
+                    "}";
+        
+        try {
+            String pathGrafo = System.getProperty("user.dir") + "/archivos/automatas/";
+            String nombreGrafo = nombreExp;
+            
+            // Guardar .dot           
+            File crearDOT = new File(pathGrafo + nombreGrafo + ".dot");      
+            FileWriter writer;
+            writer = new FileWriter(pathGrafo + nombreGrafo + ".dot");
+            writer.write(dotAFD);
             writer.close();
             
             // Crear png

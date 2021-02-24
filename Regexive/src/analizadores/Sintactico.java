@@ -362,10 +362,12 @@ class CUP$Sintactico$actions {
         raiz.follow();
         
         followTable ft = new followTable(nombre_expr);
+        ft.crearGrafoSiguientes(table);
         ft.printTable(table);
 
         transitionTable tran = new transitionTable(raiz, table, leaves, nombre_expr);
-        tran.crearGrafoTabla();
+        tran.crearGrafoTransiciones();
+        tran.crearGrafoAutomata();
         tran.impTable();
         System.out.println("-------------------------------");
     
