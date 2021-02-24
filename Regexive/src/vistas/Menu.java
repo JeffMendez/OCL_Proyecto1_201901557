@@ -47,6 +47,7 @@ public class Menu extends javax.swing.JFrame {
         "ExpReg1 -> . {letra} * | \"_\" | {letra} {digito}; \n" +
         "ExpresionReg2 -> . {digito} . \".\" + {digito};\n" +
         "RegEx3 -> . {digito} * | \"_\" | {letra} {digito};\n" +
+        "RegTest -> . {digito} . {letra} * | {letra} {digito};\n" +
         "\n" +
         "%%\n" +
         "%%\n" +

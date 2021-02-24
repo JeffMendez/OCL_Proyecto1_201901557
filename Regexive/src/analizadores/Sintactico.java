@@ -9,6 +9,10 @@ import java_cup.runtime.*;
 import java.util.ArrayList;
 import modelos.ExpresionEvaluar;
 import modelos.Conjunto;
+import modelos.Tree;
+import modelos.node;
+import modelos.followTable;
+import modelos.transitionTable;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -340,11 +344,30 @@ class CUP$Sintactico$actions {
           case 10: // DECLARACION ::= ID menos mayor EXPRESION ptcoma 
             {
               Object RESULT =null;
+		int nombre_exprleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)).left;
+		int nombre_exprright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)).right;
+		String nombre_expr = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)).value;
 		int exprleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
 		int exprright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
 		Object expr = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
 		
-        System.out.println("." + expr + "#");
+        String expresion = "." + expr + "#";
+        
+        ArrayList<node> leaves = new ArrayList();
+        ArrayList<ArrayList> table = new ArrayList();
+        Tree arbol = new Tree(expresion, leaves, table);
+
+        node raiz = arbol.getRoot();
+        raiz.getNode();
+        raiz.follow();
+        
+        followTable ft = new followTable(nombre_expr);
+        ft.printTable(table);
+
+        transitionTable tran = new transitionTable(raiz, table, leaves, nombre_expr);
+        tran.crearGrafoTabla();
+        tran.impTable();
+        System.out.println("-------------------------------");
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("DECLARACION",4, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }

@@ -1,0 +1,20 @@
+digraph T {
+aHtmlTable [
+   shape=plaintext
+   color="#283747" fontcolor="#154360" label=<
+
+   <table border='1' cellborder='1'>
+   <tr>
+      <td>Hoja</td>
+      <td>Numero</td>
+      <td>Siguientes</td>
+   </tr>	<tr><td>{letra}</td><td>29</td><td>[29, 30, 31]</td></tr>
+	<tr><td>{digito}</td><td>30</td><td>[29, 30, 31]</td></tr>
+	<tr><td>{letra}</td><td>28</td><td>[29, 30, 31]</td></tr>
+	<tr><td>{digito}</td><td>27</td><td>[28]</td></tr>
+<tr><td>#</td><td>31</td><td>--</td></tr>	
+</table>
+
+   >]; 
+
+}

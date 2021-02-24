@@ -3,6 +3,10 @@ import java_cup.runtime.*;
 import java.util.ArrayList; 
 import modelos.ExpresionEvaluar;
 import modelos.Conjunto;
+import modelos.Tree;
+import modelos.node;
+import modelos.followTable;
+import modelos.transitionTable;
 
 parser code 
 {:
@@ -80,10 +84,10 @@ DECLARACION ::=
         conjunto.setNombre(nombre_conj);
         listaConjuntos.add(conjunto);
     :}
-    | ID menos mayor EXPRESION:expr ptcoma {:
+    | ID:nombre_expr menos mayor EXPRESION:expr ptcoma {:
         String expresion = "." + expr + "#";
         
-        /*ArrayList<node> leaves = new ArrayList();
+        ArrayList<node> leaves = new ArrayList();
         ArrayList<ArrayList> table = new ArrayList();
         Tree arbol = new Tree(expresion, leaves, table);
 
@@ -91,8 +95,13 @@ DECLARACION ::=
         raiz.getNode();
         raiz.follow();
         
-        followTable ft = new followTable();
-        transitionTable tran = new transitionTable(raiz, table, leaves);*/
+        followTable ft = new followTable(nombre_expr);
+        ft.printTable(table);
+
+        transitionTable tran = new transitionTable(raiz, table, leaves, nombre_expr);
+        tran.crearGrafoTabla();
+        tran.impTable();
+        System.out.println("-------------------------------");
     :}
 ;
 

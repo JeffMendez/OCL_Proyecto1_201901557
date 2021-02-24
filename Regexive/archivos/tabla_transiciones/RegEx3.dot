@@ -1,0 +1,18 @@
+digraph T {
+aHtmlTable [
+   shape=plaintext
+   color="#283747" fontcolor="#154360" label=<
+
+   <table border='1' cellborder='1'>
+   <tr>
+      <td>Estados</td>
+      <td>Terminales</td>
+   </tr>	<tr><td>S0[23]</td><td>S1 {digito}</td></tr>
+	<tr><td bgcolor="yellow">S1[24, 25, 26, 27]</td><td>S1 "_"</td></tr>
+	<tr><td bgcolor="yellow">S1[24, 25, 26, 27]</td><td>S1 {letra}</td></tr>
+	<tr><td bgcolor="yellow">S1[24, 25, 26, 27]</td><td>S1 {digito}</td></tr>
+</table>
+
+   >]; 
+
+}
