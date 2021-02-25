@@ -1,0 +1,21 @@
+digraph G {
+2042284195 [shape=record label="<IZQ>|{letra|Anulable:false|Primeros=[22]|Ultimos=[22]}|<DER>"];
+1445075609 [shape=record label="<IZQ>|{_|Anulable:false|Primeros=[23]|Ultimos=[23]}|<DER>"];
+1468851845 [shape=record label="<IZQ>|{letra|Anulable:false|Primeros=[24]|Ultimos=[24]}|<DER>"];
+1204464164 [shape=record label="<IZQ>|{digito|Anulable:false|Primeros=[25]|Ultimos=[25]}|<DER>"];
+1754963374 [shape=record label="<IZQ>|{OR|Anulable:false|Primeros=[24, 25]|Ultimos=[24, 25]}|<DER>"];
+1754963374 -> 1468851845
+1754963374 -> 1204464164
+774550774 [shape=record label="<IZQ>|{OR|Anulable:false|Primeros=[23, 24, 25, 26]|Ultimos=[23, 24, 25]}|<DER>"];
+774550774 -> 1445075609
+774550774 -> 1754963374
+513984376 [shape=record label="<IZQ>|{*|Anulable:true|Primeros=[23, 24, 25, 26]|Ultimos=[23, 24, 25]}|<DER>"];
+513984376 -> 774550774
+212587778 [shape=record label="<IZQ>|{.|Anulable:false|Primeros=[22]|Ultimos=[22, 23, 24, 25]}|<DER>"];
+212587778 -> 2042284195
+212587778 -> 513984376
+811622100 [shape=record label="<IZQ>|{#|Anulable:false|Primeros=[26]|Ultimos=[26]}|<DER>"];
+1268175146 [shape=record label="<IZQ>|{.|Anulable:false|Primeros=[22]|Ultimos=[26]}|<DER>"];
+1268175146 -> 212587778
+1268175146 -> 811622100
+}

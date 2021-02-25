@@ -1,0 +1,17 @@
+digraph G {
+1124550183 [shape=record label="<IZQ>|{digito|Anulable:false|Primeros=[17]|Ultimos=[17]}|<DER>"];
+299272320 [shape=record label="<IZQ>|{.|Anulable:false|Primeros=[18]|Ultimos=[18]}|<DER>"];
+594735760 [shape=record label="<IZQ>|{digito|Anulable:false|Primeros=[19, 20]|Ultimos=[19]}|<DER>"];
+1586526293 [shape=record label="<IZQ>|{+|Anulable:false|Primeros=[19]|Ultimos=[19]}|<DER>"];
+1586526293 -> 594735760
+668941278 [shape=record label="<IZQ>|{.|Anulable:false|Primeros=[18]|Ultimos=[19]}|<DER>"];
+668941278 -> 299272320
+668941278 -> 1586526293
+40379693 [shape=record label="<IZQ>|{.|Anulable:false|Primeros=[17]|Ultimos=[19]}|<DER>"];
+40379693 -> 1124550183
+40379693 -> 668941278
+918204802 [shape=record label="<IZQ>|{#|Anulable:false|Primeros=[20]|Ultimos=[20]}|<DER>"];
+1798649296 [shape=record label="<IZQ>|{.|Anulable:false|Primeros=[17]|Ultimos=[20]}|<DER>"];
+1798649296 -> 40379693
+1798649296 -> 918204802
+}

@@ -92,7 +92,7 @@ public class followTable {
                         "}";
         
         try {
-            String pathGrafo = System.getProperty("user.dir") + "/archivos/tabla_siguientes/";
+            String pathGrafo = System.getProperty("user.dir") + "/archivos/SIGUIENTES_201901557/";
             String nombreGrafo = nombreExp;
             
             // Guardar .dot           

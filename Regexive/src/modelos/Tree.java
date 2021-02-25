@@ -5,9 +5,14 @@
  */
 package modelos;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelos.type.Types;
 
 /**
@@ -17,8 +22,11 @@ import modelos.type.Types;
 public class Tree {
     
     node root;
+    String nombreExp;
 
-    public Tree( String er, ArrayList<node> leaves, ArrayList<ArrayList> table ) {
+    public Tree( String er, ArrayList<node> leaves, ArrayList<ArrayList> table, String nombreExp ) {
+        this.nombreExp = nombreExp;
+        
         numLeave numHoja = new numLeave(er);
         Stack pila = new Stack();
           
@@ -117,6 +125,89 @@ public class Tree {
     
     public node getRoot(){
         return this.root;
+    }
+    
+    public void crearGrafoArbol() {
+        String dotArbol = "digraph G {";
+        dotArbol += graficarParte(this.root);
+        dotArbol += "\n}";
+        
+        try {
+            String pathGrafo = System.getProperty("user.dir") + "/archivos/ARBOLES_201901557/";
+            String nombreGrafo = nombreExp;
+            
+            // Guardar .dot           
+            File crearDOT = new File(pathGrafo + nombreGrafo + ".dot");      
+            FileWriter writer;
+            writer = new FileWriter(pathGrafo + nombreGrafo + ".dot");
+            writer.write(dotArbol);
+            writer.close();
+            
+            // Crear png
+            String[] cmd = {"dot", "-Tpng", pathGrafo + nombreGrafo + ".dot", "-o", pathGrafo + nombreGrafo + ".png"};
+            Runtime rt = Runtime.getRuntime();
+            rt.exec(cmd);   
+        } catch (IOException ex) {
+            Logger.getLogger(transitionTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public String graficarParte(node leave) {
+        String dotArbol = "";
+        
+        if (leave.left != null) {
+            dotArbol += graficarParte((node)leave.left);
+        }
+        
+        if (leave.right != null) {
+            dotArbol += graficarParte((node)leave.right);
+        }
+        
+        // Caso hoja
+        switch(leave.type) {
+            case HOJA:
+                // Declarar hoja
+                // id_hojanodo [shape=record label="<IZQ>|{Valor: .|Anulable:false\nPrimeros=1\nUltimos=5 }|<DER>"];
+                if (leave.lexeme.equals("#")) {
+                    dotArbol += "\n" + leave.hashCode() + " [shape=record label=\"<IZQ>|{" + leave.lexeme + "|Anulable:" + leave.anullable + "|Primeros=" + leave.first + "|Ultimos=" + leave.last + "}|<DER>\"];";
+                } else {
+                    dotArbol += "\n" + leave.hashCode() + " [shape=record label=\"<IZQ>|{" + leave.lexeme.substring(1, leave.lexeme.length()-1) + "|Anulable:" + leave.anullable + "|Primeros=" + leave.first + "|Ultimos=" + leave.last + "}|<DER>\"];";
+                }
+                break;
+            case OR:
+                // Declarar nodo
+                dotArbol += "\n" + leave.hashCode() + " [shape=record label=\"<IZQ>|{OR" + "|Anulable:" + leave.anullable + "|Primeros=" + leave.first + "|Ultimos=" + leave.last + "}|<DER>\"];";
+                // Uniones
+                dotArbol += "\n" + leave.hashCode() + " -> " + leave.left.hashCode();
+                dotArbol += "\n" + leave.hashCode() + " -> " + leave.right.hashCode();
+                break;
+            case AND:
+                // Declarar nodo
+                dotArbol += "\n" + leave.hashCode() + " [shape=record label=\"<IZQ>|{." + "|Anulable:" + leave.anullable + "|Primeros=" + leave.first + "|Ultimos=" + leave.last + "}|<DER>\"];";
+                // Uniones
+                dotArbol += "\n" + leave.hashCode() + " -> " + leave.left.hashCode();
+                dotArbol += "\n" + leave.hashCode() + " -> " + leave.right.hashCode();
+                break;
+            case KLEENE:
+                // Declarar nodo
+                dotArbol += "\n" + leave.hashCode() + " [shape=record label=\"<IZQ>|{*" + "|Anulable:" + leave.anullable + "|Primeros=" + leave.first + "|Ultimos=" + leave.last + "}|<DER>\"];";
+                // Uniones
+                dotArbol += "\n" + leave.hashCode() + " -> " + leave.left.hashCode();
+                break;
+            case MAS:
+                // Declarar nodo
+                dotArbol += "\n" + leave.hashCode() + " [shape=record label=\"<IZQ>|{+" + "|Anulable:" + leave.anullable + "|Primeros=" + leave.first + "|Ultimos=" + leave.last + "}|<DER>\"];";
+                // Uniones
+                dotArbol += "\n" + leave.hashCode() + " -> " + leave.left.hashCode();
+                break;
+            case INTERROGACION:
+                // Declarar nodo
+                dotArbol += "\n" + leave.hashCode() + " [shape=record label=\"<IZQ>|{?" + "|Anulable:" + leave.anullable + "|Primeros=" + leave.first + "|Ultimos=" + leave.last + "}|<DER>\"];";
+                // Uniones
+                dotArbol += "\n" + leave.hashCode() + " -> " + leave.left.hashCode();
+                break;
+        }        
+        return dotArbol;
     }
     
 }

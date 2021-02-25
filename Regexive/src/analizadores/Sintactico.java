@@ -13,6 +13,7 @@ import modelos.Tree;
 import modelos.node;
 import modelos.followTable;
 import modelos.transitionTable;
+import modelos.ErrorFile;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -165,11 +166,18 @@ public class Sintactico extends java_cup.runtime.lr_parser {
 
     public static ArrayList<ExpresionEvaluar> listaExpEvaluar = new ArrayList<ExpresionEvaluar>();
     public static ArrayList<Conjunto> listaConjuntos = new ArrayList<Conjunto>();
+    public static ArrayList<ErrorFile> listaErrores = new ArrayList<ErrorFile>();
 
     /**
      * Método al que se llama automáticamente ante algún error sintactico.
      **/ 
     public void syntax_error(Symbol s){ 
+        int fila = s.left;
+        int columna = s.right;
+
+        ErrorFile newError = new ErrorFile(fila, columna, s.value.toString(), "Sintactico");
+        listaErrores.add(newError);
+        
         System.out.println("Error Sintáctico en la Línea " + (s.left) +
         " Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
     } 
@@ -179,6 +187,12 @@ public class Sintactico extends java_cup.runtime.lr_parser {
      * en el que ya no es posible una recuperación de errores.
      **/ 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        int fila = s.left;
+        int columna = s.right;
+
+        ErrorFile newError = new ErrorFile(fila, columna, s.value.toString(), "Sintactico");
+        listaErrores.add(newError);
+        
         System.out.println("Error síntactico irrecuperable en la Línea " + 
         (s.left)+ " Columna "+s.right+". Componente " + s.value + 
         " no reconocido."); 
@@ -355,11 +369,12 @@ class CUP$Sintactico$actions {
         
         ArrayList<node> leaves = new ArrayList();
         ArrayList<ArrayList> table = new ArrayList();
-        Tree arbol = new Tree(expresion, leaves, table);
+        Tree arbol = new Tree(expresion, leaves, table, nombre_expr);
 
         node raiz = arbol.getRoot();
         raiz.getNode();
         raiz.follow();
+        arbol.crearGrafoArbol();
         
         followTable ft = new followTable(nombre_expr);
         ft.crearGrafoSiguientes(table);

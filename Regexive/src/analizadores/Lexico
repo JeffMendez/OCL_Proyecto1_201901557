@@ -1,7 +1,13 @@
 package analizadores;
 import java_cup.runtime.Symbol; 
+import java.util.ArrayList;
+import modelos.ErrorFile;
 
 %% 
+
+%{
+    public static ArrayList<ErrorFile> listaErrores = new ArrayList<ErrorFile>();
+%}
 
 %class Lexico
 %public 
@@ -62,4 +68,7 @@ id = {letra}({letra}|{digito}|"_")*
 
 . {
     System.out.println("Este es un error lexico: "+yytext()+", en la linea: "+yyline+", en la columna: "+yychar);
+    
+    ErrorFile newError = new ErrorFile(yyline, yychar, yytext(), "Lexico");
+    listaErrores.add(newError);
 }

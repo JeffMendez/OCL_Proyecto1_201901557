@@ -8,14 +8,9 @@ package modelos;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import vistas.Menu;
 
 /**
  *
@@ -148,7 +143,7 @@ public class transitionTable {
                         "}";
        
         try {
-            String pathGrafo = System.getProperty("user.dir") + "/archivos/tabla_transiciones/";
+            String pathGrafo = System.getProperty("user.dir") + "/archivos/TRANSICIONES_201901557/";
             String nombreGrafo = nombreExp;
             
             // Guardar .dot           
@@ -170,11 +165,18 @@ public class transitionTable {
     
     public void crearGrafoAutomata() {
         String dotAFD = "digraph G {\n";
-                
+              
+        String estadoAcept = "";
+        
         for(ArrayList state : states){
             
             ArrayList<Integer> siguientes = (ArrayList<Integer>) state.get(1);
             boolean aceptacion = (boolean)state.get(3);
+            
+            if (aceptacion) {
+               String estado = (String) state.get(0);
+               dotAFD += "\t" + estado + " [shape=\"doublecircle\"]"; 
+            }
             
             // Recorrer transiciones
             for(Object tr : (ArrayList)state.get(2)){
@@ -192,12 +194,12 @@ public class transitionTable {
                 } 
             }
         }
-        
+          
         dotAFD += "\n" +
                     "}";
         
         try {
-            String pathGrafo = System.getProperty("user.dir") + "/archivos/automatas/";
+            String pathGrafo = System.getProperty("user.dir") + "/archivos/AFD_201901557/";
             String nombreGrafo = nombreExp;
             
             // Guardar .dot           

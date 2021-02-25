@@ -20,7 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import modelos.ErrorFile;
 import modelos.FileTypeFilter;
 import regexive.Regexive;
 
@@ -74,7 +74,7 @@ public class Menu extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        txtCMD = new javax.swing.JTextArea();
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -125,10 +125,10 @@ public class Menu extends javax.swing.JFrame {
 
         jLabel2.setText("Salida");
 
-        jTextArea2.setEditable(false);
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+        txtCMD.setEditable(false);
+        txtCMD.setColumns(20);
+        txtCMD.setRows(5);
+        jScrollPane2.setViewportView(txtCMD);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -348,9 +348,28 @@ public class Menu extends javax.swing.JFrame {
             System.out.println("Inicio analisis.....");
             
             Lexico lexico = new Lexico(new BufferedReader(new StringReader(txtEntrada.getText())));
-            Sintactico sintactico = new Sintactico(lexico);
-            sintactico.parse();
             
+            if (lexico.listaErrores.size() > 0) {
+                String salidaCMD = txtCMD.getText();
+                for(int i=0; i<lexico.listaErrores.size(); i++) {
+                    ErrorFile error = lexico.listaErrores.get(i);
+                    salidaCMD += "\nError léxico: " + error.getValor() + " , linea: " + error.getFila() + " , columna: " + error.getColumna();
+                }
+                txtCMD.setText(salidaCMD);
+            } else {              
+                Sintactico sintactico = new Sintactico(lexico);
+                sintactico.parse();
+                
+                if (sintactico.listaErrores.size() > 0) {
+                    String salidaCMD = txtCMD.getText();
+                    for(int i=0; i<sintactico.listaErrores.size(); i++) {
+                        ErrorFile error = sintactico.listaErrores.get(i);
+                        salidaCMD += "\nError sintáctico: " + error.getValor() + " , linea: " + error.getFila() + " , columna: " + error.getColumna();
+                    }
+                    txtCMD.setText(salidaCMD);
+                }
+            }
+         
             System.out.println("Analisis finalizado");
         } catch (Exception ex) {
             Logger.getLogger(Regexive.class.getName()).log(Level.SEVERE, null, ex);
@@ -477,7 +496,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTextArea txtCMD;
     private javax.swing.JTextArea txtEntrada;
     // End of variables declaration//GEN-END:variables
 }

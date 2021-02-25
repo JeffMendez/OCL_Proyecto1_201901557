@@ -1,5 +1,7 @@
 package analizadores;
 import java_cup.runtime.Symbol; 
+import java.util.ArrayList;
+import modelos.ErrorFile;
 
 
 public class Lexico implements java_cup.runtime.Scanner {
@@ -12,6 +14,8 @@ public class Lexico implements java_cup.runtime.Scanner {
 	private final int YY_NO_ANCHOR = 4;
 	private final int YY_BOL = 65536;
 	private final int YY_EOF = 65537;
+
+    public static ArrayList<ErrorFile> listaErrores = new ArrayList<ErrorFile>();
 	private java.io.BufferedReader yy_reader;
 	private int yy_buffer_index;
 	private int yy_buffer_read;
@@ -375,6 +379,8 @@ public class Lexico implements java_cup.runtime.Scanner {
 					case 18:
 						{
     System.out.println("Este es un error lexico: "+yytext()+", en la linea: "+yyline+", en la columna: "+yychar);
+    ErrorFile newError = new ErrorFile(yyline, yychar, yytext(), "Lexico");
+    listaErrores.add(newError);
 }
 					case -19:
 						break;
