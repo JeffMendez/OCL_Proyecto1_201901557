@@ -1,21 +1,21 @@
 digraph G {
-1888127443 [shape=record label="<IZQ>|{digito|Anulable:false|Primeros=[27]|Ultimos=[27]}|<DER>"];
-1077259256 [shape=record label="<IZQ>|{letra|Anulable:false|Primeros=[28]|Ultimos=[28]}|<DER>"];
-63150110 [shape=record label="<IZQ>|{letra|Anulable:false|Primeros=[29]|Ultimos=[29]}|<DER>"];
-1442620524 [shape=record label="<IZQ>|{digito|Anulable:false|Primeros=[30]|Ultimos=[30]}|<DER>"];
-1897691921 [shape=record label="<IZQ>|{OR|Anulable:false|Primeros=[29, 30, 31]|Ultimos=[29, 30]}|<DER>"];
-1897691921 -> 63150110
-1897691921 -> 1442620524
-471561377 [shape=record label="<IZQ>|{*|Anulable:true|Primeros=[29, 30, 31]|Ultimos=[29, 30]}|<DER>"];
-471561377 -> 1897691921
-59186260 [shape=record label="<IZQ>|{.|Anulable:false|Primeros=[28]|Ultimos=[28, 29, 30]}|<DER>"];
-59186260 -> 1077259256
-59186260 -> 471561377
-870848396 [shape=record label="<IZQ>|{.|Anulable:false|Primeros=[27]|Ultimos=[28, 29, 30]}|<DER>"];
-870848396 -> 1888127443
-870848396 -> 59186260
-566109715 [shape=record label="<IZQ>|{#|Anulable:false|Primeros=[31]|Ultimos=[31]}|<DER>"];
-1724379385 [shape=record label="<IZQ>|{.|Anulable:false|Primeros=[27]|Ultimos=[31]}|<DER>"];
-1724379385 -> 870848396
-1724379385 -> 566109715
+2066760655 [shape=record label="<IZQ>|{digito|Anulable:false|Primeros=[27]|Ultimos=[27]}|<DER>"];
+818048976 [shape=record label="<IZQ>|{letra|Anulable:false|Primeros=[28]|Ultimos=[28]}|<DER>"];
+868968937 [shape=record label="<IZQ>|{letra|Anulable:false|Primeros=[29]|Ultimos=[29]}|<DER>"];
+1864741684 [shape=record label="<IZQ>|{digito|Anulable:false|Primeros=[30]|Ultimos=[30]}|<DER>"];
+385006372 [shape=record label="<IZQ>|{OR|Anulable:false|Primeros=[29, 30, 31]|Ultimos=[29, 30]}|<DER>"];
+385006372 -> 868968937
+385006372 -> 1864741684
+896395973 [shape=record label="<IZQ>|{*|Anulable:true|Primeros=[29, 30, 31]|Ultimos=[29, 30]}|<DER>"];
+896395973 -> 385006372
+1568754080 [shape=record label="<IZQ>|{.|Anulable:false|Primeros=[28]|Ultimos=[28, 29, 30]}|<DER>"];
+1568754080 -> 818048976
+1568754080 -> 896395973
+536866103 [shape=record label="<IZQ>|{.|Anulable:false|Primeros=[27]|Ultimos=[28, 29, 30]}|<DER>"];
+536866103 -> 2066760655
+536866103 -> 1568754080
+475483767 [shape=record label="<IZQ>|{#|Anulable:false|Primeros=[31]|Ultimos=[31]}|<DER>"];
+1177990394 [shape=record label="<IZQ>|{.|Anulable:false|Primeros=[27]|Ultimos=[31]}|<DER>"];
+1177990394 -> 536866103
+1177990394 -> 475483767
 }

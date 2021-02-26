@@ -29,8 +29,17 @@ public class Conjunto {
         int asciiIzq = (int) limiteIzq.toString().charAt(0);
         int asciiDer = (int) limiteDer.toString().charAt(0);    
         // Agregar elementos intermedios
-        for(int i = asciiIzq; i <= asciiDer; i++) {
-            this.elementos.add(i);
+        
+        if (asciiIzq < asciiDer) {
+            // Caso menor a-z
+            for(int i = asciiIzq; i <= asciiDer; i++) {
+                this.elementos.add(i);
+            }   
+        } else {
+            // Caso mayor z-a
+            for(int i = asciiIzq; i >= asciiDer; i--) {
+                this.elementos.add(i);
+            }
         }
     }
     

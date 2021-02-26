@@ -26,10 +26,11 @@ digito = [0-9]
 letra = [a-zA-ZÑñ]+
 
 blanco = \t|\f|" "|\r|\n
-comentario = "//"[^\r\n]*[^\r\n]
+comentario = ("//")+(.)*
 comentarioMulti = "<!" [^!>] ~ "!>" | "!>" "!"+ "!>"
 
 cadena = [\"][^\"]*[\"\n]
+caracter = ["\\""]*|["\\'"]*|["\\n"]*
 virgu = "~"
 ascii = [!-}]
 id = {letra}({letra}|{digito}|"_")* 
@@ -62,6 +63,7 @@ id = {letra}({letra}|{digito}|"_")*
 {comentarioMulti} {}
  
 {cadena} {return new Symbol(sym.CADENA,yyline,yychar, yytext());}
+{caracter} {return new Symbol(sym.CARACTER,yyline,yychar, yytext());}
 {virgu} {return new Symbol(sym.virgu,yyline,yychar, yytext());}
 {ascii} {return new Symbol(sym.ASCII,yyline,yychar, yytext());}
 {id} {return new Symbol(sym.ID,yyline,yychar, yytext());}

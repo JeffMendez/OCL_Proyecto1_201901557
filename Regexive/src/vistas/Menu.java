@@ -21,6 +21,8 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import modelos.ErrorFile;
+import modelos.Expresion;
+import modelos.ExpresionEvaluar;
 import modelos.FileTypeFilter;
 import regexive.Regexive;
 
@@ -32,6 +34,8 @@ public class Menu extends javax.swing.JFrame {
 
     String nombreArchivo;
     String pathArchivo;
+    Lexico lexico;
+    Sintactico sintactico;
 
     public Menu() {
         initComponents();
@@ -48,11 +52,12 @@ public class Menu extends javax.swing.JFrame {
         "ExpresionReg2 -> . {digito} . \".\" + {digito};\n" +
         "RegEx3 -> . {digito} * | \"_\" | {letra} {digito};\n" +
         "RegTest -> . {digito} . {letra} * | {letra} {digito};\n" +
+        "EXP5  ->  . \\' * | \\\" | \\n {digito}; " +
         "\n" +
         "%%\n" +
         "%%\n" +
         "\n" +
-        "ExpReg1 : \"primerLexemaCokoa\"; \n" +
+        "ExpReg1 : \"abLexemaCokoa\"; \n" +
         "ExpresionReg2 : \"34.44\";\n" +
         "\n" +
         "}");
@@ -71,7 +76,7 @@ public class Menu extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtEntrada = new javax.swing.JTextArea();
         btnGenerarAutomata = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnAnalizar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtCMD = new javax.swing.JTextArea();
@@ -116,10 +121,10 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Analizar Entradas");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnAnalizar.setText("Analizar Entradas");
+        btnAnalizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnAnalizarActionPerformed(evt);
             }
         });
 
@@ -280,7 +285,7 @@ public class Menu extends javax.swing.JFrame {
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(btnGenerarAutomata)
                                     .addGap(24, 24, 24)
-                                    .addComponent(jButton3))
+                                    .addComponent(btnAnalizar))
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel1))
                         .addGap(18, 18, 18)
@@ -315,7 +320,7 @@ public class Menu extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnGenerarAutomata)
-                            .addComponent(jButton3)))
+                            .addComponent(btnAnalizar)))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(4, 4, 4)
                 .addComponent(jLabel2)
@@ -339,15 +344,31 @@ public class Menu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
+        if (sintactico.listaExpresiones.size() > 0) {          
+            String jsonResultados = "";
+            
+            for(int i=0; i<sintactico.listaExpEvaluar.size(); i++) {
+                ExpresionEvaluar expresionEvaluar = sintactico.listaExpEvaluar.get(i);          
+                // Buscar la expresion
+                for(int j=0; j<sintactico.listaExpresiones.size(); j++) {
+                    Expresion expr = sintactico.listaExpresiones.get(i);                
+                    if (expr.getNombre().equals(expresionEvaluar.getNombreExpresion())) {
+                        jsonResultados += expr.analizarEntrada(expresionEvaluar.getValor(), sintactico.listaConjuntos);
+                        break;
+                    }
+                }
+            }   
+        } else {
+            JOptionPane.showMessageDialog(null, "No hay automatas generados para analizar");
+        }   
+    }//GEN-LAST:event_btnAnalizarActionPerformed
 
     private void btnGenerarAutomataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarAutomataActionPerformed
         try {
             System.out.println("Inicio analisis.....");
             
-            Lexico lexico = new Lexico(new BufferedReader(new StringReader(txtEntrada.getText())));
+            lexico = new Lexico(new BufferedReader(new StringReader(txtEntrada.getText())));
             
             if (lexico.listaErrores.size() > 0) {
                 String salidaCMD = txtCMD.getText();
@@ -357,7 +378,7 @@ public class Menu extends javax.swing.JFrame {
                 }
                 txtCMD.setText(salidaCMD);
             } else {              
-                Sintactico sintactico = new Sintactico(lexico);
+                sintactico = new Sintactico(lexico);
                 sintactico.parse();
                 
                 if (sintactico.listaErrores.size() > 0) {
@@ -466,11 +487,11 @@ public class Menu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem btnAbrirArchivo;
+    private javax.swing.JButton btnAnalizar;
     private javax.swing.JButton btnGenerarAutomata;
     private javax.swing.JMenuItem btnGuardar;
     private javax.swing.JMenuItem btnGuardarComo;
     private javax.swing.JMenuItem btnNuevoArchivo;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JComboBox<String> jComboBox1;

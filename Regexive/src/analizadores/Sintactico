@@ -8,10 +8,12 @@ import modelos.node;
 import modelos.followTable;
 import modelos.transitionTable;
 import modelos.ErrorFile;
+import modelos.Expresion;
 
 parser code 
 {:
     public static ArrayList<ExpresionEvaluar> listaExpEvaluar = new ArrayList<ExpresionEvaluar>();
+    public static ArrayList<Expresion> listaExpresiones = new ArrayList<Expresion>();
     public static ArrayList<Conjunto> listaConjuntos = new ArrayList<Conjunto>();
     public static ArrayList<ErrorFile> listaErrores = new ArrayList<ErrorFile>();
 
@@ -50,7 +52,7 @@ terminal String CONJ;
 terminal String ptcoma, dospuntos, menos, mayor, porcentaje;
 terminal String llaveIzq, llaveDer;
 terminal String mas, interrogacion, asterisco, pleca, punto, coma;
-terminal String CADENA, virgu, ASCII, ID;
+terminal String CADENA, CARACTER, virgu, ASCII, ID;
 
 non terminal INICIO;
 non terminal CONTENIDO, DECLARACIONES, EVALUACIONES;
@@ -101,7 +103,8 @@ DECLARACION ::=
     | ID:nombre_expr menos mayor EXPRESION:expr ptcoma {:
         String expresion = "." + expr + "#";
         
-        ArrayList<node> leaves = new ArrayList();
+        System.out.println(expresion);
+        /*ArrayList<node> leaves = new ArrayList();
         ArrayList<ArrayList> table = new ArrayList();
         Tree arbol = new Tree(expresion, leaves, table, nombre_expr);
 
@@ -112,12 +115,16 @@ DECLARACION ::=
         
         followTable ft = new followTable(nombre_expr);
         ft.crearGrafoSiguientes(table);
-        ft.printTable(table);
-
+        
         transitionTable tran = new transitionTable(raiz, table, leaves, nombre_expr);
         tran.crearGrafoTransiciones();
         tran.crearGrafoAutomata();
-        tran.impTable();
+
+        Expresion nuevaExpReg = new Expresion(nombre_expr, raiz, tran.states);
+        listaExpresiones.add(nuevaExpReg);
+
+        ft.printTable(table);
+        tran.impTable();*/
         System.out.println("-------------------------------");
     :}
 ;
@@ -161,6 +168,10 @@ EXPRESION ::=
         RESULT = "{" + id + "}";
     :}
     | CADENA:a 
+    {:
+        RESULT = a;
+    :}
+    | CARACTER:a 
     {:
         RESULT = a;
     :}
