@@ -374,18 +374,18 @@ class CUP$Sintactico$actions {
         String expresion = "." + expr + "#";
         
         System.out.println(expresion);
-        /*ArrayList<node> leaves = new ArrayList();
+        ArrayList<node> leaves = new ArrayList();
         ArrayList<ArrayList> table = new ArrayList();
-        Tree arbol = new Tree(expresion, leaves, table, nombre_expr);
 
+        Tree arbol = new Tree(expresion, leaves, table, nombre_expr);
         node raiz = arbol.getRoot();
         raiz.getNode();
         raiz.follow();
         arbol.crearGrafoArbol();
-        
+  
         followTable ft = new followTable(nombre_expr);
         ft.crearGrafoSiguientes(table);
-        
+    
         transitionTable tran = new transitionTable(raiz, table, leaves, nombre_expr);
         tran.crearGrafoTransiciones();
         tran.crearGrafoAutomata();
@@ -394,7 +394,7 @@ class CUP$Sintactico$actions {
         listaExpresiones.add(nuevaExpReg);
 
         ft.printTable(table);
-        tran.impTable();*/
+        tran.impTable();
         System.out.println("-------------------------------");
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("DECLARACION",4, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);

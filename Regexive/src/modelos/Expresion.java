@@ -72,7 +72,6 @@ public class Expresion {
                             // Conjunto
                             if (terminal.charAt(0) == '{') {
                                 String nombreConj = terminal.substring(1, terminal.length()-1);
-
                                 for(Conjunto conj : conjuntos) {
                                     if (nombreConj.equals(conj.getNombre())) {
                                         // Buscar caracter en el intervalo del conjunto
@@ -90,8 +89,39 @@ public class Expresion {
                                         break;
                                     }
                                 }
-                                break;
                             }
+                            // Caracter especial
+                            else if (terminal.equals("\"") || terminal.equals("\'") || terminal.equals("\n")) {
+                                if (caracter.equals(terminal)) {
+                                    // Completar transición
+                                    estadoActual = estadoDestino;
+                                    valido = true;
+                                } else {
+                                    valido = false;
+                                }
+                            }
+                            // Cadenas de texto
+                            else {
+                                String strTerminal = terminal.substring(1, terminal.length()-1);
+                                int totalCadena = strTerminal.length();
+                                String cadenaValidar = "";
+                                for (int j=i; j<(i+totalCadena); j++) {
+                                    cadenaValidar += entradaSplit[j];
+                                    
+                                    if (cadenaValidar.equals(strTerminal)) {
+                                        // Completar transición
+                                        estadoActual = estadoDestino;
+                                        valido = true;
+                                        i = j;
+                                        break;
+                                    }
+                                }
+                                
+                                if (!cadenaValidar.equals(strTerminal)) {
+                                    valido = false;      
+                                }
+                            }      
+                            if (valido) { break; }
                         }
                         break;
                     }               
@@ -118,8 +148,7 @@ public class Expresion {
                 System.out.println("Aceptacion: " + estadoActual);
             }
         }
-        
-        System.out.println("Analizar esto: " + entrada);    
+         
         return "{}";
     }
 }

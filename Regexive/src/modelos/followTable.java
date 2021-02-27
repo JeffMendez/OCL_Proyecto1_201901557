@@ -77,9 +77,23 @@ public class followTable {
         for (int i=0; i < table.size(); i++) {          
             ArrayList item = table.get(i);
             Integer numeroHoja = (Integer) item.get(0);
-            String valorHoja = (String) item.get(1);
             ArrayList<Integer> siguientes = (ArrayList<Integer>) item.get(2);
-            
+            String valorHoja = "";
+                    
+            switch((String)item.get(1)) {
+                case "\"":
+                    valorHoja = "Comilla doble";
+                    break;
+                case "\'":
+                    valorHoja = "Comilla simple";
+                    break;
+                case "\n":
+                    valorHoja = "Salto de linea";
+                    break;
+                default:
+                    valorHoja = (String)item.get(1);
+                    break;
+            }   
             dotTable += "\t<tr><td>" + valorHoja + "</td><td>" + numeroHoja + "</td><td>" + siguientes + "</td></tr>\n";                                              
             if (numeroHoja > maxHoja) { maxHoja = numeroHoja; }
         }

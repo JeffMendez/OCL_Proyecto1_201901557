@@ -1,0 +1,19 @@
+digraph T {
+aHtmlTable [
+   shape=plaintext
+   color="#283747" fontcolor="#154360" label=<
+
+   <table border='1' cellborder='1'>
+   <tr>
+      <td>Estados</td>
+      <td>Terminales</td>
+   </tr>	<tr><td>S0[21]</td><td>S1 "hijosmios"</td></tr>
+	<tr><td>S1[22]</td><td>S2 Comilla simple</td></tr>
+	<tr><td bgcolor="yellow">S2[23, 24, 25, 26]</td><td>S2 Comilla doble</td></tr>
+	<tr><td bgcolor="yellow">S2[23, 24, 25, 26]</td><td>S2 Salto de linea</td></tr>
+	<tr><td bgcolor="yellow">S2[23, 24, 25, 26]</td><td>S2 {digito}</td></tr>
+</table>
+
+   >]; 
+
+}

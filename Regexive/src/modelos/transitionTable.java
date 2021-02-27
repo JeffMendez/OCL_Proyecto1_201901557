@@ -125,9 +125,24 @@ public class transitionTable {
               
                 String[] itemsTransicion = t.toString().split("->");
                 String estadoOrigen = itemsTransicion[0].replace(" ", "");
-                String terminal = itemsTransicion[1].replace(" ", "");
+                String terminal = "";
                 String estadoDestino = itemsTransicion[2].replace(" ", "");
                 
+                switch(itemsTransicion[1].replace(" ", "")) {
+                    case "\"":
+                        terminal = "Comilla doble";
+                        break;
+                    case "\'":
+                        terminal = "Comilla simple";
+                        break;
+                    case "\n":
+                        terminal = "Salto de linea";
+                        break;
+                    default:
+                        terminal = itemsTransicion[1].replace(" ", "");
+                        break;
+                }   
+                       
                 if (aceptacion) {
                     dotTable += "\t<tr><td bgcolor=\"yellow\">" + estadoOrigen + siguientes + "</td><td>" + estadoDestino + " " + terminal + "</td></tr>\n";               
                 } else {
@@ -184,14 +199,31 @@ public class transitionTable {
               
                 String[] itemsTransicion = t.toString().split("->");
                 String estadoOrigen = itemsTransicion[0].replace(" ", "");
-                String terminal = itemsTransicion[1].replace(" ", "");
+                String terminal = "";
                 String estadoDestino = itemsTransicion[2].replace(" ", "");
                 
-                if (terminal.charAt(0) == '{') {
-                    dotAFD += "\t" + estadoOrigen + " -> " + estadoDestino + " [label=\"" + terminal + "\"]";
-                } else {
+                switch(itemsTransicion[1].replace(" ", "")) {
+                    case "\"":
+                        terminal = "Comilla doble";
+                        break;
+                    case "\'":
+                        terminal = "Comilla simple";
+                        break;
+                    case "\n":
+                        terminal = "Salto de linea";
+                        break;
+                    default:
+                        terminal = itemsTransicion[1].replace(" ", "");
+                        break;
+                }  
+                
+                if (terminal.charAt(0) == '\"') {
+                    // Cadenas
                     dotAFD += "\t" + estadoOrigen + " -> " + estadoDestino + " [label=\"" + terminal.substring(1, terminal.length() -1) + "\"]";
-                } 
+                } else {
+                    // Conjuntos y caracteres especiales
+                    dotAFD += "\t" + estadoOrigen + " -> " + estadoDestino + " [label=\"" + terminal + "\"]";
+                }
             }
         }
           

@@ -48,15 +48,16 @@ public class Menu extends javax.swing.JFrame {
         "CONJ: vocales -> a,e,i,o,u;\n" +
         "\n" +
         "/////// EXPRESIONES REGULARES\n" +
-        "ExpReg1 -> . {letra} * | \"_\" | {letra} {digito}; \n" +
+        "EXP5  -> . \"hijosmios\" . \\' * | \\\" | \\n {digito};\n" +
+        "ExpReg1 -> . {letra} * | \"_\" | {letra} {digito};\n" +
         "ExpresionReg2 -> . {digito} . \".\" + {digito};\n" +
         "RegEx3 -> . {digito} * | \"_\" | {letra} {digito};\n" +
         "RegTest -> . {digito} . {letra} * | {letra} {digito};\n" +
-        "EXP5  ->  . \\' * | \\\" | \\n {digito}; " +
         "\n" +
         "%%\n" +
         "%%\n" +
         "\n" +
+        "EXP5 : \"hijosmios'\"9\"; \n" +
         "ExpReg1 : \"abLexemaCokoa\"; \n" +
         "ExpresionReg2 : \"34.44\";\n" +
         "\n" +

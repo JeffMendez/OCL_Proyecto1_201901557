@@ -53,7 +53,7 @@ public class Tree {
                         }
                         stringExpr.add(nombreConj);
                     }
-                    // Posible cadena
+                    // Cadena
                     if(erSplit[i].equals("\"")) {
                         String texto = "\"";
                         for (int j=i+1; i<erSplit.length; j++) { 
@@ -66,6 +66,15 @@ public class Tree {
                             }  
                         }
                         stringExpr.add(texto);
+                    }
+                    // Caracter especial
+                    if(erSplit[i].equals("\\")) {
+                        if (erSplit[i+1].equals("n")) {
+                            stringExpr.add("\n");
+                        } else {
+                            stringExpr.add(erSplit[i+1]);
+                        }
+                        i += 1; 
                     }
                     break;    
             }
@@ -167,47 +176,60 @@ public class Tree {
         switch(leave.type) {
             case HOJA:
                 // Declarar hoja
-                // id_hojanodo [shape=record label="<IZQ>|{Valor: .|Anulable:false\nPrimeros=1\nUltimos=5 }|<DER>"];
-                if (leave.lexeme.equals("#")) {
-                    dotArbol += "\n" + leave.hashCode() + " [shape=record label=\"<IZQ>|{" + leave.lexeme + "|Anulable:" + leave.anullable + "|Primeros=" + leave.first + "|Ultimos=" + leave.last + "}|<DER>\"];";
-                } else {
-                    dotArbol += "\n" + leave.hashCode() + " [shape=record label=\"<IZQ>|{" + leave.lexeme.substring(1, leave.lexeme.length()-1) + "|Anulable:" + leave.anullable + "|Primeros=" + leave.first + "|Ultimos=" + leave.last + "}|<DER>\"];";
+                String salidaValor = "";          
+                switch(leave.lexeme) {                  
+                    // Caracteres especiales
+                    case "#":
+                        salidaValor = "#";
+                        break;
+                    case "\n":
+                        salidaValor = "Salto de linea";
+                        break;
+                    case "\"":
+                        salidaValor = "Comilla doble";
+                        break;
+                    case "\'":           
+                        salidaValor = "Comilla simple";
+                        break;
+                    // Cadenas y conjuntos
+                    default:
+                        salidaValor = leave.lexeme.substring(1, leave.lexeme.length()-1);
                 }
+                dotArbol += "\n" + leave.hashCode() + " [shape=record label=\""+leave.first+" |{ "+leave.anullable+" | "+salidaValor+" | "+leave.number+" }| "+leave.last+"\"];";
                 break;
             case OR:
                 // Declarar nodo
-                dotArbol += "\n" + leave.hashCode() + " [shape=record label=\"<IZQ>|{OR" + "|Anulable:" + leave.anullable + "|Primeros=" + leave.first + "|Ultimos=" + leave.last + "}|<DER>\"];";
+                dotArbol += "\n" + leave.hashCode() + " [shape=record label=\""+leave.first+" |{ "+leave.anullable+" | OR | -- }| "+leave.last+"\"];";
                 // Uniones
                 dotArbol += "\n" + leave.hashCode() + " -> " + leave.left.hashCode();
                 dotArbol += "\n" + leave.hashCode() + " -> " + leave.right.hashCode();
                 break;
             case AND:
                 // Declarar nodo
-                dotArbol += "\n" + leave.hashCode() + " [shape=record label=\"<IZQ>|{." + "|Anulable:" + leave.anullable + "|Primeros=" + leave.first + "|Ultimos=" + leave.last + "}|<DER>\"];";
+                dotArbol += "\n" + leave.hashCode() + " [shape=record label=\""+leave.first+" |{ "+leave.anullable+" | . | -- }| "+leave.last+"\"];";
                 // Uniones
                 dotArbol += "\n" + leave.hashCode() + " -> " + leave.left.hashCode();
                 dotArbol += "\n" + leave.hashCode() + " -> " + leave.right.hashCode();
                 break;
             case KLEENE:
                 // Declarar nodo
-                dotArbol += "\n" + leave.hashCode() + " [shape=record label=\"<IZQ>|{*" + "|Anulable:" + leave.anullable + "|Primeros=" + leave.first + "|Ultimos=" + leave.last + "}|<DER>\"];";
+                dotArbol += "\n" + leave.hashCode() + " [shape=record label=\""+leave.first+" |{ "+leave.anullable+" | * | -- }| "+leave.last+"\"];";
                 // Uniones
                 dotArbol += "\n" + leave.hashCode() + " -> " + leave.left.hashCode();
                 break;
             case MAS:
                 // Declarar nodo
-                dotArbol += "\n" + leave.hashCode() + " [shape=record label=\"<IZQ>|{+" + "|Anulable:" + leave.anullable + "|Primeros=" + leave.first + "|Ultimos=" + leave.last + "}|<DER>\"];";
+                dotArbol += "\n" + leave.hashCode() + " [shape=record label=\""+leave.first+" |{ "+leave.anullable+" | + | -- }| "+leave.last+"\"];";
                 // Uniones
                 dotArbol += "\n" + leave.hashCode() + " -> " + leave.left.hashCode();
                 break;
             case INTERROGACION:
                 // Declarar nodo
-                dotArbol += "\n" + leave.hashCode() + " [shape=record label=\"<IZQ>|{?" + "|Anulable:" + leave.anullable + "|Primeros=" + leave.first + "|Ultimos=" + leave.last + "}|<DER>\"];";
+                dotArbol += "\n" + leave.hashCode() + " [shape=record label=\""+leave.first+" |{ "+leave.anullable+" | ? | -- }| "+leave.last+"\"];";
                 // Uniones
                 dotArbol += "\n" + leave.hashCode() + " -> " + leave.left.hashCode();
                 break;
         }        
         return dotArbol;
-    }
-    
+    }   
 }
