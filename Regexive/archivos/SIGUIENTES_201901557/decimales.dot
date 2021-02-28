@@ -8,7 +8,7 @@ aHtmlTable [
       <td>Hoja</td>
       <td>Numero</td>
       <td>Siguientes</td>
-   </tr>	<tr><td>digito</td><td>1</td><td>[2]</td></tr>
+   </tr>	<tr><td>digito</td><td>1</td><td>[1, 2]</td></tr>
 	<tr><td>.</td><td>2</td><td>[3]</td></tr>
 	<tr><td>digito</td><td>3</td><td>[3, 4]</td></tr>
 	<tr><td>#</td><td>4</td><td>[]</td></tr>

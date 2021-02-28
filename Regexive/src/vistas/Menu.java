@@ -48,7 +48,7 @@ public class Menu extends javax.swing.JFrame {
         "CONJ: vocales -> a,e,i,o,u;\n" +
         "\n" +
         "/////// EXPRESIONES REGULARES\n" +
-        "EXP5  -> . \"hijosmios\" . \\' * | \\\" | \\n {digito};\n" +
+        "EXP5  -> . \"hijosmios\" . \\' * | \\\" | \\n {digito};\n " +
         "ExpReg1 -> . {letra} * | \"_\" | {letra} {digito};\n" +
         "ExpresionReg2 -> . {digito} . \".\" + {digito};\n" +
         "RegEx3 -> . {digito} * | \"_\" | {letra} {digito};\n" +
@@ -353,11 +353,11 @@ public class Menu extends javax.swing.JFrame {
                 ExpresionEvaluar expresionEvaluar = sintactico.listaExpEvaluar.get(i);          
                 // Buscar la expresion
                 for(int j=0; j<sintactico.listaExpresiones.size(); j++) {
-                    Expresion expr = sintactico.listaExpresiones.get(i);                
+                    /*Expresion expr = sintactico.listaExpresiones.get(i);                
                     if (expr.getNombre().equals(expresionEvaluar.getNombreExpresion())) {
                         jsonResultados += expr.analizarEntrada(expresionEvaluar.getValor(), sintactico.listaConjuntos);
                         break;
-                    }
+                    }*/
                 }
             }   
         } else {

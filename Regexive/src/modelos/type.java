@@ -12,10 +12,12 @@ package modelos;
 public class type {
     public static enum Types{
         HOJA,
-        AND,
-        OR,
-        KLEENE,
-        MAS,
-        INTERROGACION
+        AND,               // .
+        OR,                // |
+        KLEENE,            // *
+        MAS,               // +
+        INTERROGACION,     // ?
+        CADENA,            // "texto"
+        CARACTERESPECIAL,  // \n \' \"
     };
 }

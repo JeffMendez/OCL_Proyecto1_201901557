@@ -7,14 +7,22 @@ package analizadores;
 
 import java_cup.runtime.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import modelos.ExpresionEvaluar;
-import modelos.Conjunto;
 import modelos.Tree;
 import modelos.node;
 import modelos.followTable;
 import modelos.transitionTable;
 import modelos.ErrorFile;
 import modelos.Expresion;
+import modelos.Conjunto;
+import modelos.Nodo;
+import modelos.Tipo;
+import modelos.Siguiente;
+import modelos.ExpresionRegular;
+import modelos.Grafo;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -170,9 +178,34 @@ public class Sintactico extends java_cup.runtime.lr_parser {
 
 
     public static ArrayList<ExpresionEvaluar> listaExpEvaluar = new ArrayList<ExpresionEvaluar>();
-    public static ArrayList<Expresion> listaExpresiones = new ArrayList<Expresion>();
+    public static ArrayList<ExpresionRegular> listaExpresiones = new ArrayList<ExpresionRegular>();
     public static ArrayList<Conjunto> listaConjuntos = new ArrayList<Conjunto>();
     public static ArrayList<ErrorFile> listaErrores = new ArrayList<ErrorFile>();
+
+    int contadorHojas = 1;
+
+    public static ArrayList<Siguiente> listaSiguientes = new ArrayList<Siguiente>();
+
+    public void calculoSiguiente(Nodo raiz) {
+        Nodo nodoIzq = raiz.getIzquierdo();
+        Nodo nodoDer = raiz.getDerecho();
+
+        if (raiz.getTipo() == Tipo.ASTERISCO || raiz.getTipo() == Tipo.MAS) { 
+            // A cada uno de los ultimos izquierdos se le agregaran los primeros izquierdos
+            for(int i=0; i<nodoIzq.getUltimos().size(); i++) {
+                int pos = nodoIzq.getUltimos().get(i)-1;              
+                listaSiguientes.get(pos).getSiguientes().addAll(nodoIzq.getPrimeros());
+            }
+        }
+
+        if (raiz.getTipo() == Tipo.AND) {
+            // A cada uno de los ultimos izquierdos se le agregan los primeros derechos
+            for(int i=0; i<nodoIzq.getUltimos().size(); i++) {
+                int pos = nodoIzq.getUltimos().get(i)-1;
+                listaSiguientes.get(pos).getSiguientes().addAll(nodoDer.getPrimeros());
+            }
+        }
+    }
 
     /**
      * Método al que se llama automáticamente ante algún error sintactico.
@@ -367,13 +400,52 @@ class CUP$Sintactico$actions {
 		int nombre_exprleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)).left;
 		int nombre_exprright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)).right;
 		String nombre_expr = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)).value;
-		int exprleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
-		int exprright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
-		Object expr = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
+		int nodoleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
+		int nodoright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
+		Object nodo = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
 		
-        String expresion = "." + expr + "#";
+        Nodo nodoIzq = (Nodo) nodo;
         
-        System.out.println(expresion);
+        boolean anulable = false; 
+        Nodo nodoRaiz = new Nodo(".", Tipo.AND, 0, anulable);
+
+        Nodo nodoAceptacion = new Nodo("#", Tipo.ACEPTACION, contadorHojas, anulable);
+        nodoAceptacion.agregarPrimero(contadorHojas);
+        nodoAceptacion.agregarUltimo(contadorHojas);
+        listaSiguientes.add(new Siguiente(contadorHojas, "#"));
+
+        nodoRaiz.setIzquierdo(nodoIzq);    
+        nodoRaiz.setDerecho(nodoAceptacion);
+        nodoRaiz.calcularPrimerosUltimos();
+
+        calculoSiguiente(nodoRaiz);
+        
+        for(Siguiente siguiente: listaSiguientes) {
+            Collections.sort(siguiente.getSiguientes());
+            
+            Set hs = new HashSet<>();
+            hs.addAll(siguiente.getSiguientes());
+            
+            siguiente.getSiguientes().clear();
+            siguiente.getSiguientes().addAll(hs);
+        }
+        
+        // Agregar expresion regular
+        ExpresionRegular nuevaExpReg = new ExpresionRegular(nombre_expr, nodoRaiz, listaSiguientes);
+        listaExpresiones.add(nuevaExpReg);
+
+        // Crear todos los graficos
+        Grafo nuevosGrafos = new Grafo(nuevaExpReg);
+        nuevosGrafos.generarGrafoArbol();
+        nuevosGrafos.generarTablaSiguientes();
+        nuevosGrafos.generarTablaTransiciones();
+
+        System.out.println("Completado");
+        listaSiguientes.clear();
+        contadorHojas = 1;
+
+
+        /*System.out.println(expresion);
         ArrayList<node> leaves = new ArrayList();
         ArrayList<ArrayList> table = new ArrayList();
 
@@ -394,7 +466,7 @@ class CUP$Sintactico$actions {
         listaExpresiones.add(nuevaExpReg);
 
         ft.printTable(table);
-        tran.impTable();
+        tran.impTable();*/
         System.out.println("-------------------------------");
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("DECLARACION",4, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
@@ -438,14 +510,27 @@ class CUP$Sintactico$actions {
           case 13: // EXPRESION ::= punto EXPRESION EXPRESION 
             {
               Object RESULT =null;
-		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
-		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
-		Object a = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
-		int bleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
-		int bright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
-		Object b = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		int izqleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
+		int izqright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
+		Object izq = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
+		int derleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int derright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		Object der = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-        RESULT = "."+a+b;
+        Nodo nodoIzq = (Nodo) izq;
+        Nodo nodoDer = (Nodo) der;
+
+        boolean anulable = false; // Temporal
+        Nodo nuevoNodo = new Nodo(".", Tipo.AND, 0, anulable);
+
+        nuevoNodo.setIzquierdo(nodoIzq);
+        nuevoNodo.setDerecho(nodoDer);
+        nuevoNodo.calcularAnulable();
+        nuevoNodo.calcularPrimerosUltimos();
+
+        calculoSiguiente(nuevoNodo);
+
+        RESULT = nuevoNodo;
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXPRESION",7, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -455,14 +540,25 @@ class CUP$Sintactico$actions {
           case 14: // EXPRESION ::= pleca EXPRESION EXPRESION 
             {
               Object RESULT =null;
-		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
-		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
-		Object a = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
-		int bleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
-		int bright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
-		Object b = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
-		
-        RESULT = "|"+a+b;
+		int izqleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
+		int izqright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
+		Object izq = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
+		int derleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int derright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		Object der = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		  
+        Nodo nodoIzq = (Nodo) izq;
+        Nodo nodoDer = (Nodo) der;
+
+        boolean anulable = false; // Temporal
+        Nodo nuevoNodo = new Nodo("|", Tipo.OR, 0, anulable);
+        
+        nuevoNodo.setIzquierdo(nodoIzq);
+        nuevoNodo.setDerecho(nodoDer);
+        nuevoNodo.calcularAnulable();
+        nuevoNodo.calcularPrimerosUltimos();
+             
+        RESULT = nuevoNodo;
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXPRESION",7, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -472,11 +568,22 @@ class CUP$Sintactico$actions {
           case 15: // EXPRESION ::= asterisco EXPRESION 
             {
               Object RESULT =null;
-		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
-		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
-		Object a = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		int nodoleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int nodoright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		Object nodo = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-        RESULT = "*"+a;
+        Nodo nodoInferior = (Nodo) nodo;
+        
+        boolean anulable = true;
+        Nodo nuevoNodo = new Nodo("*", Tipo.ASTERISCO, 0, anulable);
+        
+        nuevoNodo.setIzquierdo(nodoInferior);
+        nuevoNodo.setPrimeros(nodoInferior.getPrimeros());
+        nuevoNodo.setUltimos(nodoInferior.getUltimos());
+        
+        calculoSiguiente(nuevoNodo);
+
+        RESULT = nuevoNodo;
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXPRESION",7, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -486,11 +593,23 @@ class CUP$Sintactico$actions {
           case 16: // EXPRESION ::= mas EXPRESION 
             {
               Object RESULT =null;
-		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
-		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
-		Object a = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		int nodoleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int nodoright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		Object nodo = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-        RESULT = "+"+a;
+        Nodo nodoInferior = (Nodo) nodo;
+        
+        boolean anulable = false; // Temporal
+        Nodo nuevoNodo = new Nodo("+", Tipo.MAS, 0, anulable);
+  
+        nuevoNodo.setIzquierdo(nodoInferior);    
+        nuevoNodo.setPrimeros(nodoInferior.getPrimeros());
+        nuevoNodo.setUltimos(nodoInferior.getUltimos());
+        nuevoNodo.calcularAnulable();
+        
+        calculoSiguiente(nuevoNodo);
+            
+        RESULT = nuevoNodo;
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXPRESION",7, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -500,11 +619,20 @@ class CUP$Sintactico$actions {
           case 17: // EXPRESION ::= interrogacion EXPRESION 
             {
               Object RESULT =null;
-		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
-		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
-		Object a = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		int nodoleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int nodoright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		Object nodo = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-        RESULT = "?"+a;
+        Nodo nodoInferior = (Nodo) nodo;
+        
+        boolean anulable = true;
+        Nodo nuevoNodo = new Nodo("?", Tipo.INTERROGACION, 0, anulable);  
+         
+        nuevoNodo.setPrimeros(nodoInferior.getPrimeros());
+        nuevoNodo.setUltimos(nodoInferior.getUltimos());
+        nuevoNodo.setIzquierdo(nodoInferior);
+        
+        RESULT = nuevoNodo;
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXPRESION",7, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -514,11 +642,21 @@ class CUP$Sintactico$actions {
           case 18: // EXPRESION ::= llaveIzq ID llaveDer 
             {
               Object RESULT =null;
-		int idleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
-		int idright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
-		String id = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
-		
-        RESULT = "{" + id + "}";
+		int nombre_conjleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
+		int nombre_conjright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
+		String nombre_conj = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
+		  
+        String nombreConjunto = nombre_conj;
+        boolean anulable = false;
+        Nodo nuevoNodo = new Nodo(nombreConjunto, Tipo.CONJUNTO, contadorHojas, anulable);
+        
+        nuevoNodo.agregarPrimero(contadorHojas);
+        nuevoNodo.agregarUltimo(contadorHojas);
+
+        listaSiguientes.add(new Siguiente(contadorHojas, nombreConjunto));
+        
+        contadorHojas++;
+        RESULT = nuevoNodo;  
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXPRESION",7, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -528,11 +666,21 @@ class CUP$Sintactico$actions {
           case 19: // EXPRESION ::= CADENA 
             {
               Object RESULT =null;
-		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
-		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
-		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		int cadenaleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int cadenaright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		String cadena = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-        RESULT = a;
+        String txtCadena = cadena.substring(1,cadena.length()-1); // Quitar comillas
+        boolean anulable = false;
+        Nodo nuevoNodo = new Nodo(txtCadena, Tipo.CADENA, contadorHojas, anulable);
+        
+        nuevoNodo.agregarPrimero(contadorHojas);
+        nuevoNodo.agregarUltimo(contadorHojas);
+
+        listaSiguientes.add(new Siguiente(contadorHojas, txtCadena));
+
+        contadorHojas++;
+        RESULT = nuevoNodo;  
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXPRESION",7, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -542,11 +690,21 @@ class CUP$Sintactico$actions {
           case 20: // EXPRESION ::= CARACTER 
             {
               Object RESULT =null;
-		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
-		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
-		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		int caracterleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int caracterright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		String caracter = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-        RESULT = a;
+        String charEspecial = caracter;
+        boolean anulable = false;
+        Nodo nuevoNodo = new Nodo(caracter, Tipo.CARACTERESPECIAL, contadorHojas, anulable);
+        
+        nuevoNodo.agregarPrimero(contadorHojas);
+        nuevoNodo.agregarUltimo(contadorHojas);
+
+        listaSiguientes.add(new Siguiente(contadorHojas, charEspecial));
+
+        contadorHojas++;
+        RESULT = nuevoNodo;
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXPRESION",7, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }

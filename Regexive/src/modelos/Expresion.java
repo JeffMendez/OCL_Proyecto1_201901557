@@ -62,7 +62,7 @@ public class Expresion {
                     if (state.get(0).equals(estadoActual)) {
                         // Recorrer transiciones
                         for(Object tr : (ArrayList)state.get(2)){
-                            transicion t = (transicion) tr;
+                            transicions t = (transicions) tr;
 
                             String[] itemsTransicion = t.toString().split("->");
                             String estadoOrigen = itemsTransicion[0].replace(" ", "");

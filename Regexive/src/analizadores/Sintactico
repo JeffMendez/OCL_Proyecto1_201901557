@@ -1,8 +1,10 @@
 package analizadores; 
 import java_cup.runtime.*;
 import java.util.ArrayList; 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import modelos.ExpresionEvaluar;
-import modelos.Conjunto;
 import modelos.Tree;
 import modelos.node;
 import modelos.followTable;
@@ -10,12 +12,45 @@ import modelos.transitionTable;
 import modelos.ErrorFile;
 import modelos.Expresion;
 
+import modelos.Conjunto;
+import modelos.Nodo;
+import modelos.Tipo;
+import modelos.Siguiente;
+
+import modelos.ExpresionRegular;
+import modelos.Grafo;
+
 parser code 
 {:
     public static ArrayList<ExpresionEvaluar> listaExpEvaluar = new ArrayList<ExpresionEvaluar>();
-    public static ArrayList<Expresion> listaExpresiones = new ArrayList<Expresion>();
+    public static ArrayList<ExpresionRegular> listaExpresiones = new ArrayList<ExpresionRegular>();
     public static ArrayList<Conjunto> listaConjuntos = new ArrayList<Conjunto>();
     public static ArrayList<ErrorFile> listaErrores = new ArrayList<ErrorFile>();
+
+    int contadorHojas = 1;
+
+    public static ArrayList<Siguiente> listaSiguientes = new ArrayList<Siguiente>();
+
+    public void calculoSiguiente(Nodo raiz) {
+        Nodo nodoIzq = raiz.getIzquierdo();
+        Nodo nodoDer = raiz.getDerecho();
+
+        if (raiz.getTipo() == Tipo.ASTERISCO || raiz.getTipo() == Tipo.MAS) { 
+            // A cada uno de los ultimos izquierdos se le agregaran los primeros izquierdos
+            for(int i=0; i<nodoIzq.getUltimos().size(); i++) {
+                int pos = nodoIzq.getUltimos().get(i)-1;              
+                listaSiguientes.get(pos).getSiguientes().addAll(nodoIzq.getPrimeros());
+            }
+        }
+
+        if (raiz.getTipo() == Tipo.AND) {
+            // A cada uno de los ultimos izquierdos se le agregan los primeros derechos
+            for(int i=0; i<nodoIzq.getUltimos().size(); i++) {
+                int pos = nodoIzq.getUltimos().get(i)-1;
+                listaSiguientes.get(pos).getSiguientes().addAll(nodoDer.getPrimeros());
+            }
+        }
+    }
 
     /**
      * Método al que se llama automáticamente ante algún error sintactico.
@@ -100,10 +135,49 @@ DECLARACION ::=
         conjunto.setNombre(nombre_conj);
         listaConjuntos.add(conjunto);
     :}
-    | ID:nombre_expr menos mayor EXPRESION:expr ptcoma {:
-        String expresion = "." + expr + "#";
+    | ID:nombre_expr menos mayor EXPRESION:nodo ptcoma {:
+        Nodo nodoIzq = (Nodo) nodo;
         
-        System.out.println(expresion);
+        boolean anulable = false; 
+        Nodo nodoRaiz = new Nodo(".", Tipo.AND, 0, anulable);
+
+        Nodo nodoAceptacion = new Nodo("#", Tipo.ACEPTACION, contadorHojas, anulable);
+        nodoAceptacion.agregarPrimero(contadorHojas);
+        nodoAceptacion.agregarUltimo(contadorHojas);
+        listaSiguientes.add(new Siguiente(contadorHojas, "#"));
+
+        nodoRaiz.setIzquierdo(nodoIzq);    
+        nodoRaiz.setDerecho(nodoAceptacion);
+        nodoRaiz.calcularPrimerosUltimos();
+
+        calculoSiguiente(nodoRaiz);
+        
+        for(Siguiente siguiente: listaSiguientes) {
+            Collections.sort(siguiente.getSiguientes());
+            
+            Set hs = new HashSet<>();
+            hs.addAll(siguiente.getSiguientes());
+            
+            siguiente.getSiguientes().clear();
+            siguiente.getSiguientes().addAll(hs);
+        }
+        
+        // Agregar expresion regular
+        ExpresionRegular nuevaExpReg = new ExpresionRegular(nombre_expr, nodoRaiz, listaSiguientes);
+        listaExpresiones.add(nuevaExpReg);
+
+        // Crear todos los graficos
+        Grafo nuevosGrafos = new Grafo(nuevaExpReg);
+        nuevosGrafos.generarGrafoArbol();
+        nuevosGrafos.generarTablaSiguientes();
+        nuevosGrafos.generarTablaTransiciones();
+
+        System.out.println("Completado");
+        listaSiguientes.clear();
+        contadorHojas = 1;
+
+
+        /*System.out.println(expresion);
         ArrayList<node> leaves = new ArrayList();
         ArrayList<ArrayList> table = new ArrayList();
 
@@ -124,7 +198,7 @@ DECLARACION ::=
         listaExpresiones.add(nuevaExpReg);
 
         ft.printTable(table);
-        tran.impTable();
+        tran.impTable();*/
         System.out.println("-------------------------------");
     :}
 ;
@@ -143,37 +217,123 @@ LISTACARACTERES ::=
 ;
 
 EXPRESION ::=
-    punto EXPRESION:a EXPRESION:b 
+    punto EXPRESION:izq EXPRESION:der 
     {:
-        RESULT = "."+a+b;
+        Nodo nodoIzq = (Nodo) izq;
+        Nodo nodoDer = (Nodo) der;
+
+        boolean anulable = false; // Temporal
+        Nodo nuevoNodo = new Nodo(".", Tipo.AND, 0, anulable);
+
+        nuevoNodo.setIzquierdo(nodoIzq);
+        nuevoNodo.setDerecho(nodoDer);
+        nuevoNodo.calcularAnulable();
+        nuevoNodo.calcularPrimerosUltimos();
+
+        calculoSiguiente(nuevoNodo);
+
+        RESULT = nuevoNodo;
     :}
-    | pleca EXPRESION:a EXPRESION:b 
-    {:
-        RESULT = "|"+a+b;
+    | pleca EXPRESION:izq EXPRESION:der 
+    {:  
+        Nodo nodoIzq = (Nodo) izq;
+        Nodo nodoDer = (Nodo) der;
+
+        boolean anulable = false; // Temporal
+        Nodo nuevoNodo = new Nodo("|", Tipo.OR, 0, anulable);
+        
+        nuevoNodo.setIzquierdo(nodoIzq);
+        nuevoNodo.setDerecho(nodoDer);
+        nuevoNodo.calcularAnulable();
+        nuevoNodo.calcularPrimerosUltimos();
+             
+        RESULT = nuevoNodo;
     :}
-    | asterisco EXPRESION:a 
+    | asterisco EXPRESION:nodo 
     {:
-        RESULT = "*"+a;
+        Nodo nodoInferior = (Nodo) nodo;
+        
+        boolean anulable = true;
+        Nodo nuevoNodo = new Nodo("*", Tipo.ASTERISCO, 0, anulable);
+        
+        nuevoNodo.setIzquierdo(nodoInferior);
+        nuevoNodo.setPrimeros(nodoInferior.getPrimeros());
+        nuevoNodo.setUltimos(nodoInferior.getUltimos());
+        
+        calculoSiguiente(nuevoNodo);
+
+        RESULT = nuevoNodo;
     :}
-    | mas EXPRESION:a 
+    | mas EXPRESION:nodo 
     {:
-        RESULT = "+"+a;
+        Nodo nodoInferior = (Nodo) nodo;
+        
+        boolean anulable = false; // Temporal
+        Nodo nuevoNodo = new Nodo("+", Tipo.MAS, 0, anulable);
+  
+        nuevoNodo.setIzquierdo(nodoInferior);    
+        nuevoNodo.setPrimeros(nodoInferior.getPrimeros());
+        nuevoNodo.setUltimos(nodoInferior.getUltimos());
+        nuevoNodo.calcularAnulable();
+        
+        calculoSiguiente(nuevoNodo);
+            
+        RESULT = nuevoNodo;
     :}
-    | interrogacion EXPRESION:a 
+    | interrogacion EXPRESION:nodo 
     {:
-        RESULT = "?"+a;
+        Nodo nodoInferior = (Nodo) nodo;
+        
+        boolean anulable = true;
+        Nodo nuevoNodo = new Nodo("?", Tipo.INTERROGACION, 0, anulable);  
+         
+        nuevoNodo.setPrimeros(nodoInferior.getPrimeros());
+        nuevoNodo.setUltimos(nodoInferior.getUltimos());
+        nuevoNodo.setIzquierdo(nodoInferior);
+        
+        RESULT = nuevoNodo;
     :}
-    | llaveIzq ID:id llaveDer 
-    {:
-        RESULT = "{" + id + "}";
+    | llaveIzq ID:nombre_conj llaveDer 
+    {:  
+        String nombreConjunto = nombre_conj;
+        boolean anulable = false;
+        Nodo nuevoNodo = new Nodo(nombreConjunto, Tipo.CONJUNTO, contadorHojas, anulable);
+        
+        nuevoNodo.agregarPrimero(contadorHojas);
+        nuevoNodo.agregarUltimo(contadorHojas);
+
+        listaSiguientes.add(new Siguiente(contadorHojas, nombreConjunto));
+        
+        contadorHojas++;
+        RESULT = nuevoNodo;  
     :}
-    | CADENA:a 
+    | CADENA:cadena 
     {:
-        RESULT = a;
+        String txtCadena = cadena.substring(1,cadena.length()-1); // Quitar comillas
+        boolean anulable = false;
+        Nodo nuevoNodo = new Nodo(txtCadena, Tipo.CADENA, contadorHojas, anulable);
+        
+        nuevoNodo.agregarPrimero(contadorHojas);
+        nuevoNodo.agregarUltimo(contadorHojas);
+
+        listaSiguientes.add(new Siguiente(contadorHojas, txtCadena));
+
+        contadorHojas++;
+        RESULT = nuevoNodo;  
     :}
-    | CARACTER:a 
+    | CARACTER:caracter
     {:
-        RESULT = a;
+        String charEspecial = caracter;
+        boolean anulable = false;
+        Nodo nuevoNodo = new Nodo(caracter, Tipo.CARACTERESPECIAL, contadorHojas, anulable);
+        
+        nuevoNodo.agregarPrimero(contadorHojas);
+        nuevoNodo.agregarUltimo(contadorHojas);
+
+        listaSiguientes.add(new Siguiente(contadorHojas, charEspecial));
+
+        contadorHojas++;
+        RESULT = nuevoNodo;
     :}
 ;
 

@@ -9,12 +9,12 @@ package modelos;
  *
  * @author Jeffry
  */
-public class transicion {
+public class transicions {
     public String initialState;
     public String transition;
     public String finalState;
     
-    public transicion( String initialState, String transition, String finalState ) {
+    public transicions( String initialState, String transition, String finalState ) {
         this.initialState = initialState;
         this.transition = transition;
         this.finalState = finalState;

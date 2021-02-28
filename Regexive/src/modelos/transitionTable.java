@@ -70,7 +70,7 @@ public class transitionTable {
                     nuevo.add(new ArrayList());
                     nuevo.add(false);
                     
-                    transicion trans = new transicion(state.get(0) + "", lexemeNext.get(0) + "", nuevo.get(0) + "");
+                    transicions trans = new transicions(state.get(0) + "", lexemeNext.get(0) + "", nuevo.get(0) + "");
                     ((ArrayList)state.get(2)).add(trans);
                     
                     cont += 1;
@@ -86,14 +86,14 @@ public class transitionTable {
                     boolean trans_exist = false;
                     
                     for(Object trans : (ArrayList)state.get(2)){
-                        transicion t = (transicion) trans;
+                        transicions t = (transicions) trans;
                         if(t.compare(state.get(0) + "", lexemeNext.get(0) + "")){
                             trans_exist = true;
                             break;
                         }
                     }
                     if(!trans_exist){
-                        transicion trans = new transicion(state.get(0) + "", lexemeNext.get(0) + "", found + "");
+                        transicions trans = new transicions(state.get(0) + "", lexemeNext.get(0) + "", found + "");
                         ((ArrayList)state.get(2)).add(trans);
                     }
                 }
@@ -121,7 +121,7 @@ public class transitionTable {
             
             // Recorrer transiciones
             for(Object tr : (ArrayList)state.get(2)){
-                transicion t = (transicion) tr;
+                transicions t = (transicions) tr;
               
                 String[] itemsTransicion = t.toString().split("->");
                 String estadoOrigen = itemsTransicion[0].replace(" ", "");
@@ -195,7 +195,7 @@ public class transitionTable {
             
             // Recorrer transiciones
             for(Object tr : (ArrayList)state.get(2)){
-                transicion t = (transicion) tr;
+                transicions t = (transicions) tr;
               
                 String[] itemsTransicion = t.toString().split("->");
                 String estadoOrigen = itemsTransicion[0].replace(" ", "");
@@ -255,7 +255,7 @@ public class transitionTable {
         for(ArrayList state : states){
             String tran = "[";
             for(Object tr : (ArrayList)state.get(2)){
-                transicion t = (transicion) tr;
+                transicions t = (transicions) tr;
                 tran += t.toString() + ", ";
             }
             tran += "]";           
