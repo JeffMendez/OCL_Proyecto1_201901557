@@ -27,7 +27,7 @@ letra = [a-zA-ZÑñ]+
 
 blanco = \t|\f|" "|\r|\n
 comentario = ("//")+(.)*
-comentarioMulti = "<!" [^!>] ~ "!>" | "!>" "!"+ "!>"
+comentarioMulti = ("<!")((.)|(\n))*("!>")
 
 cadena = [\"][^\"]*[\"\n]
 caracter = ["\\""]*|["\\'"]*|["\\n"]*

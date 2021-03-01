@@ -34,6 +34,121 @@ public class ExpresionRegular {
         generarTablaEstados();
     }
     
+    public String analizarEntrada(String entrada, ArrayList<Conjunto> conjuntos) {
+        String[] entradaSplit = entrada.split("");
+        String ultimoCharProcesado = "";
+        
+        boolean valido = true;     
+        String estadoActual = "S0";
+             
+        for (int i=0; i<entradaSplit.length; i++) {
+            String caracter = entradaSplit[i];
+            // Recorrer estados
+            if (valido) {
+                ultimoCharProcesado = entradaSplit[i];
+                
+                for(Estado estado: listaTransiciones) {
+                    if (estado.valor.equals(estadoActual)) {
+                        
+                        for(Transicion transicion: estado.transiciones) {
+                            String terminal = transicion.getValorHoja();
+                            String estadoDestino = transicion.getNombreEstadoDestino();
+                            
+                            // Verificar si es conjunto
+                            boolean esConj = false;
+                            for(Conjunto conj : conjuntos) {
+                                if (conj.nombre.equals(terminal)) {
+                                    esConj = true;
+                                    break;
+                                }
+                            }                         
+                            if (esConj) {
+                                for(Conjunto conj : conjuntos) {
+                                    if (terminal.equals(conj.getNombre())) {
+                                        // Buscar caracter en el intervalo del conjunto
+                                        int caracterInt = (int) caracter.charAt(0);
+                                        for (int k=0; k < conj.getElementos().size(); k++) {
+                                            if (caracterInt == conj.getElementos().get(k)) {
+                                                // Completar transición
+                                                estadoActual = estadoDestino;
+                                                valido = true;
+                                                break;
+                                            } else {
+                                                valido = false;
+                                            }
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                            // Caracter especial
+                            else if (terminal.equals("\\\"") || terminal.equals("\\\'") || terminal.equals("\\n")) {
+                                if (caracter.equals(terminal)) {
+                                    // Completar transición
+                                    estadoActual = estadoDestino;
+                                    valido = true;
+                                } else {
+                                    valido = false;
+                                }
+                            }
+                            // Cadenas de texto
+                            else {
+                                int totalCadena = terminal.length();
+                                String cadenaValidar = "";
+                                for (int j=i; j<(i+totalCadena); j++) {
+                                    cadenaValidar += entradaSplit[j];
+                                    
+                                    if (cadenaValidar.equals(terminal)) {
+                                        // Completar transición
+                                        estadoActual = estadoDestino;
+                                        valido = true;
+                                        i = j;
+                                        break;
+                                    }
+                                }
+                                
+                                if (!cadenaValidar.equals(terminal)) {
+                                    valido = false;      
+                                }
+                            }      
+                            if (valido) { break; }
+                        }
+                        break;
+                    }               
+                }
+            } else {
+                break;
+            }           
+        } 
+        
+        String jsonResultado = "\n\t{\n";
+        jsonResultado += "\t\t\"Valor\": \""+entrada+"\",\n";
+        jsonResultado += "\t\t\"ExpresionRegular\": \""+nombreExpresion+"\",\n";
+        
+        if (valido) {
+            boolean estadoAceptacion = false;
+            // Comprobar si es de aceptacion el estado actual
+            for(Estado estado: listaTransiciones) {
+                if (estado.valor.equals(estadoActual)) {
+                    estadoAceptacion = estado.isAceptacion();
+                    break;
+                }
+            }     
+            // Cadena valida armar json
+            if (estadoAceptacion) {
+                jsonResultado += "\t\t\"Resultado\": \"Cadena Válida\"\n";
+            } else {
+                jsonResultado += "\t\t\"Resultado\": \"Cadena Inválida\"\n";
+            }
+        } else {
+            jsonResultado += "\t\t\"Resultado\": \"Cadena Inválida\"\n";
+        }
+        
+        jsonResultado += "\t}";
+         
+        return jsonResultado;
+    }
+    
     public void generarTablaEstados() {
         int contEstados = 0;
         Iterator it = tablaEstados.keySet().iterator();

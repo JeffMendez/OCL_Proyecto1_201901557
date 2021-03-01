@@ -7,6 +7,8 @@ package vistas;
 
 import analizadores.Lexico;
 import analizadores.Sintactico;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,12 +20,14 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import modelos.ErrorFile;
-import modelos.Expresion;
 import modelos.ExpresionEvaluar;
+import modelos.ExpresionRegular;
 import modelos.FileTypeFilter;
+import modelos.Grafo;
 import regexive.Regexive;
 
 /**
@@ -41,6 +45,32 @@ public class Menu extends javax.swing.JFrame {
         initComponents();
         
         txtEntrada.setText("{\n" +
+                    "\n" +
+                    "<!\n" +
+                    "	Este es un comentario multilinea\n" +
+                    "	Si no da error, ya salio el proyecto\n" +
+                    "!>\n" +
+                    "CONJ: letra -> a~z; // declarando conjunto de letras desde a hasta z en minusculas\n" +
+                    "CONJ: digito -> 0~3; // creamos el conjunto de digitos solo para 0, 1, 2 y 3\n" +
+                    "\n" +
+                    "\n" +
+                    "\n" +
+                    "//agregamos Expresiones regulares\n" +
+                    "identificador -> . {letra} * | \"_\" | {letra} {digito};\n" +
+                    "decimales -> . +{digito} . \".\" + {digito};\n" +
+                    "\n" +
+                    "\n" +
+                    "\n" +
+                    "%%\n" +
+                    "%%\n" +
+                    "identificador :  \"hola_soy_id_1\"; //correcto\n" +
+                    "identificador :  \"HoLA\"; //incorrecto\n" +
+                    "decimales : \"301.59\"; //incorrecto\n" +
+                    "decimales: \"1200.31\";//correcto\n" +
+                    "\n" +
+                    "}");
+        
+        /*txtEntrada.setText("{\n" +
         "\n" +
         "////// CONJUNTOS\n" +
         "CONJ: letra -> a~z;\n" +
@@ -61,9 +91,61 @@ public class Menu extends javax.swing.JFrame {
         "ExpReg1 : \"abLexemaCokoa\"; \n" +
         "ExpresionReg2 : \"34.44\";\n" +
         "\n" +
-        "}");
+        "}");*/
+        
+        cmbImagenes.addActionListener (new ActionListener () {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mostrarImagenes();
+            }
+        });
     }
 
+    String pathImages;
+    public void mostrarImagenes() {  
+        pathImages = System.getProperty("user.dir") + "/archivos/";
+        
+        switch(cmbImagenes.getSelectedItem().toString()) {
+            case "Arboles":
+                pathImages += "ARBOLES_201901557/";
+                break;
+            case "Siguientes":
+                pathImages += "SIGUIENTES_201901557/";
+                break;
+            case "Transiciones":
+                pathImages += "TRANSICIONES_201901557/";
+                break;
+            case "Automatas":
+                pathImages += "AFD_201901557/";
+                break;
+        }   
+        visualizarGrafo(0);
+        indexImg = 0;
+    }
+    
+    int indexImg = 0;
+    public void visualizarGrafo(int index) {
+        for(int i=0; i<sintactico.listaExpresiones.size(); i++) {
+            if (i==index) {
+                String pathImg = pathImages + sintactico.listaExpresiones.get(i).getNombreExpresion() + ".png";
+                labelImage.setIcon(new ImageIcon(pathImg));
+                txtExpNombre.setText(sintactico.listaExpresiones.get(i).getNombreExpresion());
+                break;
+            }
+        }
+    }
+    
+    public void llenarListas() {
+        String[] nombresExpr = new String[sintactico.listaExpresiones.size()];
+        for(int i=0; i<sintactico.listaExpresiones.size(); i++) {
+            nombresExpr[i] = sintactico.listaExpresiones.get(i).getNombreExpresion();
+        }
+        
+        listArboles.setListData(nombresExpr);
+        listAutomatas.setListData(nombresExpr);
+        listSiguientes.setListData(nombresExpr);
+        listTransiciones.setListData(nombresExpr);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -84,22 +166,23 @@ public class Menu extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        listArboles = new javax.swing.JList<>();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList<>();
+        listSiguientes = new javax.swing.JList<>();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jList3 = new javax.swing.JList<>();
+        listTransiciones = new javax.swing.JList<>();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane6 = new javax.swing.JScrollPane();
-        jList4 = new javax.swing.JList<>();
+        listAutomatas = new javax.swing.JList<>();
         jLabel7 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cmbImagenes = new javax.swing.JComboBox<>();
         jScrollPane7 = new javax.swing.JScrollPane();
-        jLabel8 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        labelImage = new javax.swing.JLabel();
+        btnAnterior = new javax.swing.JButton();
+        btnSiguiente = new javax.swing.JButton();
+        txtExpNombre = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         btnNuevoArchivo = new javax.swing.JMenuItem();
@@ -141,40 +224,44 @@ public class Menu extends javax.swing.JFrame {
 
         jLabel3.setText("-> Arboles");
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+        listArboles.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Sin elementos" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jList1.setToolTipText("");
-        jScrollPane3.setViewportView(jList1);
+        listArboles.setToolTipText("");
+        listArboles.setEnabled(false);
+        jScrollPane3.setViewportView(listArboles);
 
         jLabel4.setText("-> Tabla de Siguientes");
 
-        jList2.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+        listSiguientes.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Sin elementos" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane4.setViewportView(jList2);
+        listSiguientes.setEnabled(false);
+        jScrollPane4.setViewportView(listSiguientes);
 
         jLabel5.setText("-> Tabla de Transiciones");
 
-        jList3.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+        listTransiciones.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Sin elementos" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane5.setViewportView(jList3);
+        listTransiciones.setEnabled(false);
+        jScrollPane5.setViewportView(listTransiciones);
 
         jLabel6.setText("-> Automatas");
 
-        jList4.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+        listAutomatas.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Sin elementos" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane6.setViewportView(jList4);
+        listAutomatas.setEnabled(false);
+        jScrollPane6.setViewportView(listAutomatas);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -221,19 +308,32 @@ public class Menu extends javax.swing.JFrame {
 
         jLabel7.setText("Visor de Imagenes:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jLabel8.setText("img");
-        jScrollPane7.setViewportView(jLabel8);
-
-        jButton4.setText("Anterior");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+        cmbImagenes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Arboles", "Siguientes", "Transiciones", "Automatas" }));
+        cmbImagenes.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                cmbImagenesPropertyChange(evt);
             }
         });
 
-        jButton5.setText("Siguiente");
+        labelImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jScrollPane7.setViewportView(labelImage);
+
+        btnAnterior.setText("Anterior");
+        btnAnterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnteriorActionPerformed(evt);
+            }
+        });
+
+        btnSiguiente.setText("Siguiente");
+        btnSiguiente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSiguienteActionPerformed(evt);
+            }
+        });
+
+        txtExpNombre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtExpNombre.setText("....");
 
         jMenu1.setText("Archivo");
 
@@ -293,53 +393,56 @@ public class Menu extends javax.swing.JFrame {
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton4)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton5)
-                        .addGap(144, 144, 144))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(37, 37, 37)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cmbImagenes, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
+                        .addComponent(btnAnterior)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSiguiente)
+                        .addGap(52, 52, 52))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtExpNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane7))
                         .addGap(23, 23, 23))))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnGenerarAutomata)
+                                    .addComponent(btnAnalizar)))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(4, 4, 4)
+                        .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnGenerarAutomata)
-                            .addComponent(btnAnalizar)))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(4, 4, 4)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                            .addComponent(jLabel7)
+                            .addComponent(cmbImagenes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnAnterior)
+                            .addComponent(btnSiguiente))
+                        .addGap(18, 18, 18)
+                        .addComponent(txtExpNombre)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane7)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
-                .addGap(117, 117, 117))
         );
 
         pack();
@@ -347,19 +450,37 @@ public class Menu extends javax.swing.JFrame {
 
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
         if (sintactico.listaExpresiones.size() > 0) {          
-            String jsonResultados = "";
-            
+            String jsonResultados = "[";          
             for(int i=0; i<sintactico.listaExpEvaluar.size(); i++) {
                 ExpresionEvaluar expresionEvaluar = sintactico.listaExpEvaluar.get(i);          
                 // Buscar la expresion
                 for(int j=0; j<sintactico.listaExpresiones.size(); j++) {
-                    /*Expresion expr = sintactico.listaExpresiones.get(i);                
-                    if (expr.getNombre().equals(expresionEvaluar.getNombreExpresion())) {
+                    ExpresionRegular expr = sintactico.listaExpresiones.get(j);                
+                    if (expr.getNombreExpresion().equals(expresionEvaluar.getNombreExpresion())) {
                         jsonResultados += expr.analizarEntrada(expresionEvaluar.getValor(), sintactico.listaConjuntos);
+                        if (i+1 < sintactico.listaExpEvaluar.size()) {
+                            jsonResultados += ",";
+                        }
                         break;
-                    }*/
+                    }
                 }
-            }   
+            }          
+            jsonResultados += "\n]";
+            
+            try {
+                String pathGrafo = System.getProperty("user.dir") + "/archivos/SALIDAS_201901557/";
+                String nombreGrafo = "resultados";
+        
+                File crearJSON = new File(pathGrafo + nombreGrafo + ".json");      
+                FileWriter writer;
+                writer = new FileWriter(pathGrafo + nombreGrafo + ".json");
+                writer.write(jsonResultados);
+                writer.close();
+                
+                JOptionPane.showMessageDialog(null, "Archivo JSON generado");
+            } catch (IOException ex) {
+                System.out.println(ex);
+            }        
         } else {
             JOptionPane.showMessageDialog(null, "No hay automatas generados para analizar");
         }   
@@ -390,17 +511,30 @@ public class Menu extends javax.swing.JFrame {
                     }
                     txtCMD.setText(salidaCMD);
                 }
+                
+                mostrarImagenes();
+                llenarListas();
             }
-         
+            
+            if (lexico.listaErrores.size() > 0 || sintactico.listaErrores.size() > 0) {
+                Grafo grafo = new Grafo();
+                grafo.generarReporteErrores(lexico.listaErrores, sintactico.listaErrores);
+            }
+            
+            JOptionPane.showMessageDialog(null, "Automatas generados (Exceptuando errores)");
             System.out.println("Analisis finalizado");
         } catch (Exception ex) {
             Logger.getLogger(Regexive.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnGenerarAutomataActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
+        indexImg--;      
+        if (indexImg < 0) {
+            indexImg++;
+        }  
+        visualizarGrafo(indexImg);
+    }//GEN-LAST:event_btnAnteriorActionPerformed
 
     private void btnNuevoArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoArchivoActionPerformed
         String numRandom = String.valueOf(new Random().nextInt(100));
@@ -486,16 +620,28 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAbrirArchivoActionPerformed
 
+    private void cmbImagenesPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_cmbImagenesPropertyChange
+
+    }//GEN-LAST:event_cmbImagenesPropertyChange
+
+    private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteActionPerformed
+        indexImg++;      
+        if (indexImg >= sintactico.listaExpresiones.size()) {
+            indexImg--;
+        }  
+        visualizarGrafo(indexImg);
+    }//GEN-LAST:event_btnSiguienteActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem btnAbrirArchivo;
     private javax.swing.JButton btnAnalizar;
+    private javax.swing.JButton btnAnterior;
     private javax.swing.JButton btnGenerarAutomata;
     private javax.swing.JMenuItem btnGuardar;
     private javax.swing.JMenuItem btnGuardarComo;
     private javax.swing.JMenuItem btnNuevoArchivo;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton btnSiguiente;
+    private javax.swing.JComboBox<String> cmbImagenes;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -503,11 +649,6 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JList<String> jList2;
-    private javax.swing.JList<String> jList3;
-    private javax.swing.JList<String> jList4;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
@@ -518,7 +659,13 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JLabel labelImage;
+    private javax.swing.JList<String> listArboles;
+    private javax.swing.JList<String> listAutomatas;
+    private javax.swing.JList<String> listSiguientes;
+    private javax.swing.JList<String> listTransiciones;
     private javax.swing.JTextArea txtCMD;
     private javax.swing.JTextArea txtEntrada;
+    private javax.swing.JLabel txtExpNombre;
     // End of variables declaration//GEN-END:variables
 }

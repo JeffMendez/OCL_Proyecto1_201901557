@@ -1,25 +1,25 @@
 digraph G {
-2543618 [shape=record label="[1] |{ false | hijosmios | 1 }| [1]"];
-1067654138 [shape=record label="[2] |{ false | Comilla simple | 2 }| [2]"];
-1434659868 [shape=record label="[3] |{ false | Comilla doble | 3 }| [3]"];
-532590898 [shape=record label="[4] |{ false | Salto de linea | 4 }| [4]"];
-699319303 [shape=record label="[5] |{ false | digito | 5 }| [5]"];
-242578947 [shape=record label="[4, 5] |{ false | OR | -- }| [4, 5]"];
-242578947 -> 532590898
-242578947 -> 699319303
-1113212957 [shape=record label="[3, 4, 5] |{ false | OR | -- }| [3, 4, 5]"];
-1113212957 -> 1434659868
-1113212957 -> 242578947
-671569477 [shape=record label="[3, 4, 5] |{ true | * | -- }| [3, 4, 5]"];
-671569477 -> 1113212957
-2010522046 [shape=record label="[2] |{ false | . | -- }| [2, 3, 4, 5]"];
-2010522046 -> 1067654138
-2010522046 -> 671569477
-1379304489 [shape=record label="[1] |{ false | . | -- }| [2, 3, 4, 5]"];
-1379304489 -> 2543618
-1379304489 -> 2010522046
-1119630546 [shape=record label="[6] |{ false | # | 6 }| [6]"];
-1344006078 [shape=record label="[1] |{ false | . | -- }| [6]"];
-1344006078 -> 1379304489
-1344006078 -> 1119630546
+1893111137 [shape=record label="[1] |{ false | hijosmios | 1 }| [1]"];
+1842579089 [shape=record label="[2] |{ false | Comilla simple | 2 }| [2]"];
+503460425 [shape=record label="[3] |{ false | Comilla doble | 3 }| [3]"];
+1106990961 [shape=record label="[4] |{ false | Salto de linea | 4 }| [4]"];
+96645042 [shape=record label="[5] |{ false | digito | 5 }| [5]"];
+1951684245 [shape=record label="[4, 5] |{ false | OR | -- }| [4, 5]"];
+1951684245 -> 1106990961
+1951684245 -> 96645042
+2068554284 [shape=record label="[3, 4, 5] |{ false | OR | -- }| [3, 4, 5]"];
+2068554284 -> 503460425
+2068554284 -> 1951684245
+1611674347 [shape=record label="[3, 4, 5] |{ true | * | -- }| [3, 4, 5]"];
+1611674347 -> 2068554284
+1883225700 [shape=record label="[2] |{ false | . | -- }| [2, 3, 4, 5]"];
+1883225700 -> 1842579089
+1883225700 -> 1611674347
+646561288 [shape=record label="[1] |{ false | . | -- }| [2, 3, 4, 5]"];
+646561288 -> 1893111137
+646561288 -> 1883225700
+16069175 [shape=record label="[6] |{ false | # | 6 }| [6]"];
+1637076904 [shape=record label="[1] |{ false | . | -- }| [6]"];
+1637076904 -> 646561288
+1637076904 -> 16069175
 }

@@ -26,6 +26,8 @@ public class Grafo {
         this.expresion = expresion;
     }
     
+    public Grafo() {}
+    
     public void generarGrafoArbol() {
         String dotArbol = "digraph G {";
         dotArbol += graficarNodo(expresion.getRaizArbol());
@@ -47,7 +49,7 @@ public class Grafo {
             Runtime rt = Runtime.getRuntime();
             rt.exec(cmd);   
         } catch (IOException ex) {
-            Logger.getLogger(transitionTable.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex);
         }
     }
     
@@ -178,7 +180,7 @@ public class Grafo {
             rt.exec(cmd);
             
         } catch (IOException ex) {
-            Logger.getLogger(transitionTable.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex);
         }
     }
     
@@ -251,7 +253,111 @@ public class Grafo {
             rt.exec(cmd);
             
         } catch (IOException ex) {
-            Logger.getLogger(transitionTable.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex);
+        }
+    }
+    
+    public void generarAFD() {
+        String dotAFD = "digraph G {\n\trankdir=LR\n";           
+        
+        for(Estado estado: expresion.getListaTransiciones()) {                 
+            if (estado.isAceptacion()) {
+                dotAFD += "\t" + estado.getValor() + " [shape=\"doublecircle\"]"; 
+            }
+            
+            for(Transicion transicion: estado.transiciones) {  
+                String terminal = "";
+                switch(transicion.getValorHoja()) {
+                    case "\\n":
+                        terminal = "Salto de linea";
+                    break;
+                    case "\\\"":
+                        terminal = "Comilla doble";
+                        break;
+                    case "\\\'":           
+                        terminal = "Comilla simple";
+                        break;
+                    default:
+                        terminal = transicion.getValorHoja();
+                        break;
+                }               
+                dotAFD += "\t" + estado.getValor() + " -> " + transicion.getNombreEstadoDestino() + " [label=\"" + terminal + "\"]";
+            }           
+        }
+        
+        dotAFD += "\n" +
+                    "}";
+        
+        try {
+            String pathGrafo = System.getProperty("user.dir") + "/archivos/AFD_201901557/";
+            String nombreGrafo = expresion.getNombreExpresion();
+            
+            // Guardar .dot           
+            File crearDOT = new File(pathGrafo + nombreGrafo + ".dot");      
+            FileWriter writer;
+            writer = new FileWriter(pathGrafo + nombreGrafo + ".dot");
+            writer.write(dotAFD);
+            writer.close();
+            
+            // Crear png
+            String[] cmd = {"dot", "-Tpng", pathGrafo + nombreGrafo + ".dot", "-o", pathGrafo + nombreGrafo + ".png"};
+            Runtime rt = Runtime.getRuntime();
+            rt.exec(cmd);
+            
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+    }
+    
+    public void generarReporteErrores(ArrayList<ErrorFile> erroresLexicos, ArrayList<ErrorFile> erroresSintacticos) {
+        String dotErrors = "digraph T {\n" +
+                            "aHtmlTable [\n" +
+                            "   shape=plaintext\n" +
+                            "   color=\"#283747\" fontcolor=\"#154360\" label=<\n" +
+                            "\n" +
+                            "   <table border='1' cellborder='1'>\n" +
+                            "   <tr>\n" +
+                            "      <td>#</td>\n" +
+                            "      <td>Tipo de Error</td>\n" +
+                            "      <td>Lexema</td>\n" +
+                            "      <td>Línea</td>\n" +
+                            "      <td>Columna</td>\n" +
+                            "   </tr>";
+        
+        int contErr = 1;       
+        for(ErrorFile errLex: erroresLexicos) {
+            dotErrors += "\t<tr><td>" + contErr + "</td><td>" + errLex.getTipoError() + "</td><td>" + errLex.getValor() + "</td><td>" + errLex.getFila() + "</td><td>" + errLex.getColumna() + "</td></tr>\n";  
+            contErr++;
+        }     
+        
+        for(ErrorFile errorSin: erroresSintacticos) {
+            dotErrors += "\t<tr><td>" + contErr + "</td><td>" + errorSin.getTipoError() + "</td><td>" + errorSin.getValor() + "</td><td>" + errorSin.getFila() + "</td><td>" + errorSin.getColumna() + "</td></tr>\n";  
+            contErr++;
+        }
+        
+        dotErrors += "</table>\n" +
+                        "\n" +
+                        "   >]; \n" +
+                        "\n" +
+                        "}";
+        
+        try {
+            String pathGrafo = System.getProperty("user.dir") + "/archivos/ERRORES_201901557/";
+            String nombreGrafo = "errores";
+            
+            // Guardar .dot           
+            File crearDOT = new File(pathGrafo + nombreGrafo + ".dot");      
+            FileWriter writer;
+            writer = new FileWriter(pathGrafo + nombreGrafo + ".dot");
+            writer.write(dotErrors);
+            writer.close();
+            
+            // Crear png
+            String[] cmd = {"dot", "-Tpng", pathGrafo + nombreGrafo + ".dot", "-o", pathGrafo + nombreGrafo + ".png"};
+            Runtime rt = Runtime.getRuntime();
+            rt.exec(cmd);        
+        } catch (IOException ex) {
+            System.out.println(ex);
         }
     }
 }

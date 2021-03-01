@@ -11,19 +11,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import modelos.ExpresionEvaluar;
-import modelos.Tree;
-import modelos.node;
-import modelos.followTable;
-import modelos.transitionTable;
 import modelos.ErrorFile;
-import modelos.Expresion;
 import modelos.Conjunto;
 import modelos.Nodo;
 import modelos.Tipo;
 import modelos.Siguiente;
 import modelos.ExpresionRegular;
 import modelos.Grafo;
-import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
   */
@@ -229,12 +223,14 @@ public class Sintactico extends java_cup.runtime.lr_parser {
         int fila = s.left;
         int columna = s.right;
 
-        ErrorFile newError = new ErrorFile(fila, columna, s.value.toString(), "Sintactico");
-        listaErrores.add(newError);
-        
-        System.out.println("Error síntactico irrecuperable en la Línea " + 
-        (s.left)+ " Columna "+s.right+". Componente " + s.value + 
-        " no reconocido."); 
+        if (fila != -1) {
+            ErrorFile newError = new ErrorFile(fila, columna, s.value.toString(), "Sintactico");
+            listaErrores.add(newError);
+
+            System.out.println("Error síntactico irrecuperable en la Línea " + 
+            (s.left)+ " Columna "+s.right+". Componente " + s.value + 
+            " no reconocido.");
+        } 
     }  
 
 
@@ -439,35 +435,11 @@ class CUP$Sintactico$actions {
         nuevosGrafos.generarGrafoArbol();
         nuevosGrafos.generarTablaSiguientes();
         nuevosGrafos.generarTablaTransiciones();
+        nuevosGrafos.generarAFD();
 
-        System.out.println("Completado");
+        System.out.println("Expresion regular: " + nombre_expr + " procesada");
         listaSiguientes.clear();
         contadorHojas = 1;
-
-
-        /*System.out.println(expresion);
-        ArrayList<node> leaves = new ArrayList();
-        ArrayList<ArrayList> table = new ArrayList();
-
-        Tree arbol = new Tree(expresion, leaves, table, nombre_expr);
-        node raiz = arbol.getRoot();
-        raiz.getNode();
-        raiz.follow();
-        arbol.crearGrafoArbol();
-  
-        followTable ft = new followTable(nombre_expr);
-        ft.crearGrafoSiguientes(table);
-    
-        transitionTable tran = new transitionTable(raiz, table, leaves, nombre_expr);
-        tran.crearGrafoTransiciones();
-        tran.crearGrafoAutomata();
-
-        Expresion nuevaExpReg = new Expresion(nombre_expr, raiz, tran.states);
-        listaExpresiones.add(nuevaExpReg);
-
-        ft.printTable(table);
-        tran.impTable();*/
-        System.out.println("-------------------------------");
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("DECLARACION",4, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }

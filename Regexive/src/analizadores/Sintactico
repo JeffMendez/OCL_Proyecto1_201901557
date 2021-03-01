@@ -74,12 +74,14 @@ parser code
         int fila = s.left;
         int columna = s.right;
 
-        ErrorFile newError = new ErrorFile(fila, columna, s.value.toString(), "Sintactico");
-        listaErrores.add(newError);
-        
-        System.out.println("Error síntactico irrecuperable en la Línea " + 
-        (s.left)+ " Columna "+s.right+". Componente " + s.value + 
-        " no reconocido."); 
+        if (fila != -1) {
+            ErrorFile newError = new ErrorFile(fila, columna, s.value.toString(), "Sintactico");
+            listaErrores.add(newError);
+
+            System.out.println("Error síntactico irrecuperable en la Línea " + 
+            (s.left)+ " Columna "+s.right+". Componente " + s.value + 
+            " no reconocido.");
+        } 
     }  
 :} 
 
@@ -171,35 +173,11 @@ DECLARACION ::=
         nuevosGrafos.generarGrafoArbol();
         nuevosGrafos.generarTablaSiguientes();
         nuevosGrafos.generarTablaTransiciones();
+        nuevosGrafos.generarAFD();
 
-        System.out.println("Completado");
+        System.out.println("Expresion regular: " + nombre_expr + " procesada");
         listaSiguientes.clear();
         contadorHojas = 1;
-
-
-        /*System.out.println(expresion);
-        ArrayList<node> leaves = new ArrayList();
-        ArrayList<ArrayList> table = new ArrayList();
-
-        Tree arbol = new Tree(expresion, leaves, table, nombre_expr);
-        node raiz = arbol.getRoot();
-        raiz.getNode();
-        raiz.follow();
-        arbol.crearGrafoArbol();
-  
-        followTable ft = new followTable(nombre_expr);
-        ft.crearGrafoSiguientes(table);
-    
-        transitionTable tran = new transitionTable(raiz, table, leaves, nombre_expr);
-        tran.crearGrafoTransiciones();
-        tran.crearGrafoAutomata();
-
-        Expresion nuevaExpReg = new Expresion(nombre_expr, raiz, tran.states);
-        listaExpresiones.add(nuevaExpReg);
-
-        ft.printTable(table);
-        tran.impTable();*/
-        System.out.println("-------------------------------");
     :}
 ;
 

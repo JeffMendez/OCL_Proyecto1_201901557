@@ -1,3 +1,4 @@
 digraph G {
-	S0 -> S1 [label="{letra}"]	S1 [shape="doublecircle"]	S1 -> S1 [label="_"]	S1 -> S1 [label="{letra}"]	S1 -> S1 [label="{digito}"]
+	rankdir=LR
+	S0 -> S1 [label="letra"]	S1 [shape="doublecircle"]	S1 -> S1 [label="letra"]	S1 -> S1 [label="digito"]	S1 -> S1 [label="_"]
 }

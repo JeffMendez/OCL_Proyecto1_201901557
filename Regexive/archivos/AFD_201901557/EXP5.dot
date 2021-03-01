@@ -1,3 +1,4 @@
 digraph G {
-	S0 -> S1 [label="hijosmios"]	S1 -> S2 [label="Comilla simple"]	S2 [shape="doublecircle"]	S2 -> S2 [label="Comilla doble"]	S2 -> S2 [label="Salto de linea"]	S2 -> S2 [label="{digito}"]
+	rankdir=LR
+	S0 -> S1 [label="hijosmios"]	S1 -> S2 [label="Comilla simple"]	S2 [shape="doublecircle"]	S2 -> S2 [label="Salto de linea"]	S2 -> S2 [label="Comilla doble"]	S2 -> S2 [label="digito"]
 }

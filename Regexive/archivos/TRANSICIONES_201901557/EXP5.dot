@@ -7,7 +7,7 @@ aHtmlTable [
    <tr>
       <td>Estados</td>
       <td>Terminales</td>
-   </tr><tr><td>S0 [1]</td><td>S1 hijosmios</td></tr><tr><td>S1 [2]</td><td>S2 Comilla simple</td></tr><tr><td bgcolor="yellow"> S2 [3, 4, 5, 6]</td><td>S2 Salto de linea</td><td>S2 digito</td><td>S2 Comilla doble</td></tr></table>
+   </tr><tr><td>S0 [1]</td><td>S1 hijosmios</td></tr><tr><td>S1 [2]</td><td>S2 Comilla simple</td></tr><tr><td bgcolor="yellow"> S2 [3, 4, 5, 6]</td><td>S2 Salto de linea</td><td>S2 Comilla doble</td><td>S2 digito</td></tr></table>
 
    >]; 
 

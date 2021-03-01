@@ -1,0 +1,19 @@
+digraph T {
+aHtmlTable [
+   shape=plaintext
+   color="#283747" fontcolor="#154360" label=<
+
+   <table border='1' cellborder='1'>
+   <tr>
+      <td>#</td>
+      <td>Tipo de Error</td>
+      <td>Lexema</td>
+      <td>Línea</td>
+      <td>Columna</td>
+   </tr>	<tr><td>1</td><td>Sintactico</td><td>es</td><td>4</td><td>8</td></tr>
+	<tr><td>2</td><td>Sintactico</td><td>es</td><td>4</td><td>8</td></tr>
+</table>
+
+   >]; 
+
+}

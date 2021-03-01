@@ -12,8 +12,8 @@ import java.util.ArrayList;
  * @author Jeffry
  */
 public class Conjunto {
-    private String nombre;
-    private ArrayList<Integer> elementos; // ASCII
+    public String nombre;
+    public ArrayList<Integer> elementos; // ASCII
 
     // Conjunto sin nombre (Temporal)
     public Conjunto() {
