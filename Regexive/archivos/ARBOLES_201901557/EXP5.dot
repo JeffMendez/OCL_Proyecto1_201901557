@@ -1,25 +1,15 @@
 digraph G {
-1893111137 [shape=record label="[1] |{ false | hijosmios | 1 }| [1]"];
-1842579089 [shape=record label="[2] |{ false | Comilla simple | 2 }| [2]"];
-503460425 [shape=record label="[3] |{ false | Comilla doble | 3 }| [3]"];
-1106990961 [shape=record label="[4] |{ false | Salto de linea | 4 }| [4]"];
-96645042 [shape=record label="[5] |{ false | digito | 5 }| [5]"];
-1951684245 [shape=record label="[4, 5] |{ false | OR | -- }| [4, 5]"];
-1951684245 -> 1106990961
-1951684245 -> 96645042
-2068554284 [shape=record label="[3, 4, 5] |{ false | OR | -- }| [3, 4, 5]"];
-2068554284 -> 503460425
-2068554284 -> 1951684245
-1611674347 [shape=record label="[3, 4, 5] |{ true | * | -- }| [3, 4, 5]"];
-1611674347 -> 2068554284
-1883225700 [shape=record label="[2] |{ false | . | -- }| [2, 3, 4, 5]"];
-1883225700 -> 1842579089
-1883225700 -> 1611674347
-646561288 [shape=record label="[1] |{ false | . | -- }| [2, 3, 4, 5]"];
-646561288 -> 1893111137
-646561288 -> 1883225700
-16069175 [shape=record label="[6] |{ false | # | 6 }| [6]"];
-1637076904 [shape=record label="[1] |{ false | . | -- }| [6]"];
-1637076904 -> 646561288
-1637076904 -> 16069175
+530156189 [shape=record label="[1] |{ false | h" . \' * | \ | 1 }| [1]"];
+1133969830 [shape=record label="[2] |{ false | Salto de linea | 2 }| [2]"];
+536883555 [shape=record label="[3] |{ false | digito | 3 }| [3]"];
+921512639 [shape=record label="[2, 3] |{ false | OR | -- }| [2, 3]"];
+921512639 -> 1133969830
+921512639 -> 536883555
+1710461853 [shape=record label="[1] |{ false | . | -- }| [2, 3]"];
+1710461853 -> 530156189
+1710461853 -> 921512639
+512898228 [shape=record label="[4] |{ false | # | 4 }| [4]"];
+1060668716 [shape=record label="[1] |{ false | . | -- }| [4]"];
+1060668716 -> 1710461853
+1060668716 -> 512898228
 }

@@ -5,12 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import modelos.ExpresionEvaluar;
-import modelos.Tree;
-import modelos.node;
-import modelos.followTable;
-import modelos.transitionTable;
 import modelos.ErrorFile;
-import modelos.Expresion;
 
 import modelos.Conjunto;
 import modelos.Nodo;

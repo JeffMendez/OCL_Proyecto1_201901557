@@ -1,0 +1,27 @@
+Inicio -> { Contenido }
+
+Contenido -> Declaraciones %%%% Evaluaciones
+
+Declaraciones -> Declaraciones declaracion
+                | Declaracion
+
+Evaluaciones -> Evaluaciones evaluacion
+                | Evaluacion
+
+Evaluacion -> ID : "cadena" ; 
+
+Declaracion -> CONJ : ID -> a ~ b
+                | CONJ : ID -> a ~ ListaCaracteres ;
+                | ID -> Expresion ;
+
+ListaCaracteres -> ListaCaracteres , b
+                | , b
+
+Expresion -> . Expresion Expresion 
+            | | Expresion Expresion
+            | * Expresion
+            | + Expresion
+            | ? Expresion
+            | { ID }
+            | cadena
+            | caracter

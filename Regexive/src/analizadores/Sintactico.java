@@ -18,6 +18,7 @@ import modelos.Tipo;
 import modelos.Siguiente;
 import modelos.ExpresionRegular;
 import modelos.Grafo;
+import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
   */

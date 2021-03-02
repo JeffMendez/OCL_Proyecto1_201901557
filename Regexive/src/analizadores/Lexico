@@ -29,7 +29,7 @@ blanco = \t|\f|" "|\r|\n
 comentario = ("//")+(.)*
 comentarioMulti = ("<!")((.)|(\n))*("!>")
 
-cadena = [\"][^\"]*[\"\n]
+cadena = (\")((.)|(\"))*(\")
 caracter = ["\\""]*|["\\'"]*|["\\n"]*
 virgu = "~"
 ascii = [!-}]
