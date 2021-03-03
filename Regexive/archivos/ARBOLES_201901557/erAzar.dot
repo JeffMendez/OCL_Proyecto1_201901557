@@ -1,0 +1,19 @@
+digraph G {
+618021302 [shape=record label="[1] |{ false | simbols | 1 }| [1]"];
+1943664857 [shape=record label="[1] |{ false | + | -- }| [1]"];
+1943664857 -> 618021302
+513348418 [shape=record label="[2] |{ false | minus | 2 }| [2]"];
+1671315347 [shape=record label="[3] |{ false | mayus | 3 }| [3]"];
+1968376231 [shape=record label="[2, 3] |{ false | OR | -- }| [2, 3]"];
+1968376231 -> 513348418
+1968376231 -> 1671315347
+1240479972 [shape=record label="[2, 3] |{ false | + | -- }| [2, 3]"];
+1240479972 -> 1968376231
+522531227 [shape=record label="[1] |{ false | . | -- }| [2, 3]"];
+522531227 -> 1943664857
+522531227 -> 1240479972
+223733579 [shape=record label="[4] |{ false | # | 4 }| [4]"];
+1613158775 [shape=record label="[1] |{ false | . | -- }| [4]"];
+1613158775 -> 522531227
+1613158775 -> 223733579
+}

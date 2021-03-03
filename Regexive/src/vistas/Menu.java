@@ -70,7 +70,7 @@ public class Menu extends javax.swing.JFrame {
                     "\n" +
                     "}");*/
         
-        txtEntrada.setText("{\n" +
+        /*txtEntrada.setText("{\n" +
         "\n" +
         "////// CONJUNTOS\n" +
         "CONJ: letra -> a~z;\n" +
@@ -91,7 +91,9 @@ public class Menu extends javax.swing.JFrame {
         "ExpReg1 : \"abLexemaCokoa\"; \n" +
         "ExpresionReg2 : \"34.44\";\n" +
         "\n" +
-        "}");
+        "}");*/
+        
+        //txtEntrada.setText("EXP5  -> . \"h\" . \\' * | \\\" | \\n {digito};");
         
         cmbImagenes.addActionListener (new ActionListener () {
             @Override
@@ -194,6 +196,7 @@ public class Menu extends javax.swing.JFrame {
 
         jLabel1.setText("Archivo de entrada");
 
+        txtEntrada.setEditable(false);
         txtEntrada.setColumns(20);
         txtEntrada.setRows(5);
         jScrollPane1.setViewportView(txtEntrada);
@@ -489,8 +492,9 @@ public class Menu extends javax.swing.JFrame {
     private void btnGenerarAutomataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarAutomataActionPerformed
         try {
             System.out.println("Inicio analisis.....");
-            
-            lexico = new Lexico(new BufferedReader(new StringReader(txtEntrada.getText())));
+            String entrada = txtEntrada.getText();
+                    
+            lexico = new Lexico(new BufferedReader(new StringReader(entrada)));
             
             if (lexico.listaErrores.size() > 0) {
                 String salidaCMD = txtCMD.getText();

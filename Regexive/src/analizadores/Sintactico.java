@@ -209,11 +209,13 @@ public class Sintactico extends java_cup.runtime.lr_parser {
         int fila = s.left;
         int columna = s.right;
 
-        ErrorFile newError = new ErrorFile(fila, columna, s.value.toString(), "Sintactico");
-        listaErrores.add(newError);
-        
-        System.out.println("Error Sintáctico en la Línea " + (s.left) +
-        " Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
+        if (fila != -1) {
+            ErrorFile newError = new ErrorFile(fila, columna, s.value.toString(), "Sintactico");
+            listaErrores.add(newError);
+
+            System.out.println("Error Sintáctico en la Línea " + (s.left) +
+            " Columna "+s.right+ ". No se esperaba este componente: " +s.value+".");
+        }
     } 
 
     /**

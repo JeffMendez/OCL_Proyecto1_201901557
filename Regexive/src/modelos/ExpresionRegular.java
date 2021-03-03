@@ -83,7 +83,6 @@ public class ExpresionRegular {
                             }
                             // Caracter especial
                             else if (terminal.equals("\\\"") || terminal.equals("\\\'") || terminal.equals("\\n")) {
-                                
                                 switch(terminal) {
                                     case "\\\"":
                                         if (caracter.equals("\"")) { valido = true; } 
@@ -99,32 +98,20 @@ public class ExpresionRegular {
                                         break;
                                 }
                                 
-                                if (caracter.equals(terminal)) {
+                                if (valido) {
                                     // Completar transición
                                     estadoActual = estadoDestino;
-                                    valido = true;
-                                } else {
-                                    valido = false;
                                 }
                             }
                             // Cadenas de texto
                             else {
-                                int totalCadena = terminal.length();
-                                String cadenaValidar = "";
-                                for (int j=i; j<(i+totalCadena); j++) {
-                                    cadenaValidar += entradaSplit[j];
-                                    
-                                    if (cadenaValidar.equals(terminal)) {
-                                        // Completar transición
-                                        estadoActual = estadoDestino;
-                                        valido = true;
-                                        i = j;
-                                        break;
-                                    }
-                                }
-                                
-                                if (!cadenaValidar.equals(terminal)) {
-                                    valido = false;      
+                                if (caracter.equals(terminal)) {
+                                    // Completar transicion
+                                    estadoActual = estadoDestino;
+                                    valido = true;
+                                    break;
+                                } else {
+                                    valido = false;
                                 }
                             }      
                             if (valido) { break; }

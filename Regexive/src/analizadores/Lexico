@@ -27,16 +27,15 @@ letra = [a-zA-ZÑñ]+
 
 blanco = \t|\f|" "|\r|\n
 comentario = ("//")+(.)*
-comentarioMulti = ("<!")((.)|(\n))*("!>")
+comentarioMulti = ("<""!"[^\!]*"!"">")
 
-cadena = (\")((.)|(\"))*(\")
-caracter = ["\\""]*|["\\'"]*|["\\n"]*
+cadena = [\"][^\"]*[\"]
+caracter = ("\\"")|["\\'"]*|("\n")
 virgu = "~"
 ascii = [!-}]
 id = {letra}({letra}|{digito}|"_")* 
 
 %%
-
 
 "CONJ" {return new Symbol(sym.CONJ,yyline,yychar,yytext());}
 

@@ -1,0 +1,33 @@
+digraph G {
+1226146693 [shape=record label="[1] |{ false | Comilla simple | 1 }| [1]"];
+367534207 [shape=record label="[2] |{ false | Salto de linea | 2 }| [2]"];
+568803992 [shape=record label="[3] |{ false | minus | 3 }| [3]"];
+1431135774 [shape=record label="[2, 3] |{ false | OR | -- }| [2, 3]"];
+1431135774 -> 367534207
+1431135774 -> 568803992
+815914649 [shape=record label="[4] |{ false | mayus | 4 }| [4]"];
+1688136490 [shape=record label="[2, 3, 4] |{ false | OR | -- }| [2, 3, 4]"];
+1688136490 -> 1431135774
+1688136490 -> 815914649
+2146862755 [shape=record label="[5] |{ false | digito | 5 }| [5]"];
+1094017749 [shape=record label="[2, 3, 4, 5] |{ false | OR | -- }| [2, 3, 4, 5]"];
+1094017749 -> 1688136490
+1094017749 -> 2146862755
+2136881532 [shape=record label="[6] |{ false |   | 6 }| [6]"];
+1821006342 [shape=record label="[2, 3, 4, 5, 6] |{ false | OR | -- }| [2, 3, 4, 5, 6]"];
+1821006342 -> 1094017749
+1821006342 -> 2136881532
+662837930 [shape=record label="[2, 3, 4, 5, 6] |{ false | + | -- }| [2, 3, 4, 5, 6]"];
+662837930 -> 1821006342
+1305212741 [shape=record label="[7] |{ false | Comilla simple | 7 }| [7]"];
+1129362009 [shape=record label="[2, 3, 4, 5, 6] |{ false | . | -- }| [7]"];
+1129362009 -> 662837930
+1129362009 -> 1305212741
+2108983903 [shape=record label="[1] |{ false | . | -- }| [7]"];
+2108983903 -> 1226146693
+2108983903 -> 1129362009
+1255442441 [shape=record label="[8] |{ false | # | 8 }| [8]"];
+1488404425 [shape=record label="[1] |{ false | . | -- }| [8]"];
+1488404425 -> 2108983903
+1488404425 -> 1255442441
+}
