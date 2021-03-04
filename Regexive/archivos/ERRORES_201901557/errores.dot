@@ -10,8 +10,8 @@ aHtmlTable [
       <td>Lexema</td>
       <td>Línea</td>
       <td>Columna</td>
-   </tr>	<tr><td>1</td><td>Sintactico</td><td>CONJ</td><td>16</td><td>2</td></tr>
-	<tr><td>2</td><td>Sintactico</td><td>CONJ</td><td>16</td><td>2</td></tr>
+   </tr>	<tr><td>1</td><td>Sintactico</td><td>\n</td><td>44</td><td>14</td></tr>
+	<tr><td>2</td><td>Sintactico</td><td>\n</td><td>44</td><td>14</td></tr>
 </table>
 
    >]; 

@@ -1,5 +1,10 @@
 [
 	{
+		"Valor": "\'a 1\na 1\'",
+		"ExpresionRegular": "EXP5",
+		"Resultado": "Cadena Válida"
+	},
+	{
 		"Valor": "hola_soy_id_1",
 		"ExpresionRegular": "identificador",
 		"Resultado": "Cadena Válida"
@@ -22,12 +27,12 @@
 	{
 		"Valor": "@yAsaLioComPI_1",
 		"ExpresionRegular": "igusername",
-		"Resultado": "Cadena Inválida"
+		"Resultado": "Cadena Válida"
 	},
 	{
 		"Valor": "15/03/2021",
 		"ExpresionRegular": "fecha",
-		"Resultado": "Cadena Inválida"
+		"Resultado": "Cadena Válida"
 	},
 	{
 		"Valor": "hola#Mundo",

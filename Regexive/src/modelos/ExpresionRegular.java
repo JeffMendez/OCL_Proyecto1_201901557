@@ -83,6 +83,14 @@ public class ExpresionRegular {
                             }
                             // Caracter especial
                             else if (terminal.equals("\\\"") || terminal.equals("\\\'") || terminal.equals("\\n")) {
+                                
+                                if (caracter.equals("\\")) {
+                                   if (entradaSplit[i+1].equals("\"") | entradaSplit[i+1].equals("\'") | entradaSplit[i+1].equals("n")) {
+                                       caracter = entradaSplit[i+1];
+                                       i++;
+                                   }
+                                }
+                                                                
                                 switch(terminal) {
                                     case "\\\"":
                                         if (caracter.equals("\"")) { valido = true; } 
@@ -93,7 +101,7 @@ public class ExpresionRegular {
                                         else { valido = false; }
                                         break;
                                     case "\\n":
-                                        if (caracter.equals("\n")) { valido = true; } 
+                                        if (caracter.equals("\n") || caracter.equals("n")) { valido = true; } 
                                         else { valido = false; }
                                         break;
                                 }
