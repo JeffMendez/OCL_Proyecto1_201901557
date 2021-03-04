@@ -119,7 +119,9 @@ EVALUACION ::=
     {:
         ExpresionEvaluar nuevaExpEvaluar = new ExpresionEvaluar(nombre_exp, valor.substring(1,valor.length()-1));
         listaExpEvaluar.add(nuevaExpEvaluar);
+        System.out.println("Evaluacion: " + nombre_exp + ":" + valor + " procesado");
     :}
+    | error ptcoma
 ;
 
 DECLARACION ::=
@@ -127,12 +129,14 @@ DECLARACION ::=
     {:
         Conjunto nuevoConj = new Conjunto(nombre_conj, a, b);
         listaConjuntos.add(nuevoConj);
+        System.out.println("Conjunto: " + nombre_conj + " procesado");
     :}
     | CONJ dospuntos ID:nombre_conj menos mayor ASCII:a LISTACARACTERES:conjunto ptcoma 
     {:
         conjunto.agregarElemento(a);
         conjunto.setNombre(nombre_conj);
         listaConjuntos.add(conjunto);
+        System.out.println("Conjunto: " + nombre_conj + " procesado");
     :}
     | ID:nombre_expr menos mayor EXPRESION:nodo ptcoma {:
         Nodo nodoIzq = (Nodo) nodo;
@@ -176,6 +180,7 @@ DECLARACION ::=
         listaSiguientes.clear();
         contadorHojas = 1;
     :}
+    | error ptcoma
 ;
 
 LISTACARACTERES ::=

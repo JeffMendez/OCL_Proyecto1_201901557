@@ -1,0 +1,37 @@
+digraph G {
+1131241230 [shape=record label="[1] |{ false | posibles | 1 }| [1]"];
+1373333889 [shape=record label="[2] |{ false | - | 2 }| [2]"];
+1161227053 [shape=record label="[2] |{ true | ? | -- }| [2]"];
+1161227053 -> 1373333889
+804426581 [shape=record label="[3] |{ false | digito | 3 }| [3]"];
+114179210 [shape=record label="[4] |{ false | digito | 4 }| [4]"];
+206817971 [shape=record label="[5] |{ false | digito | 5 }| [5]"];
+2127439767 [shape=record label="[6] |{ false | letra | 6 }| [6]"];
+1167944480 [shape=record label="[7] |{ false | letra | 7 }| [7]"];
+851457397 [shape=record label="[8] |{ false | letra | 8 }| [8]"];
+542406604 [shape=record label="[7] |{ false | . | -- }| [8]"];
+542406604 -> 1167944480
+542406604 -> 851457397
+791224014 [shape=record label="[6] |{ false | . | -- }| [8]"];
+791224014 -> 2127439767
+791224014 -> 542406604
+29598816 [shape=record label="[5] |{ false | . | -- }| [8]"];
+29598816 -> 206817971
+29598816 -> 791224014
+840647344 [shape=record label="[4] |{ false | . | -- }| [8]"];
+840647344 -> 114179210
+840647344 -> 29598816
+829602088 [shape=record label="[3] |{ false | . | -- }| [8]"];
+829602088 -> 804426581
+829602088 -> 840647344
+1447698086 [shape=record label="[2, 3] |{ false | . | -- }| [8]"];
+1447698086 -> 1161227053
+1447698086 -> 829602088
+1245073579 [shape=record label="[1] |{ false | . | -- }| [8]"];
+1245073579 -> 1131241230
+1245073579 -> 1447698086
+584091039 [shape=record label="[9] |{ false | # | 9 }| [9]"];
+105890580 [shape=record label="[1] |{ false | . | -- }| [9]"];
+105890580 -> 1245073579
+105890580 -> 584091039
+}

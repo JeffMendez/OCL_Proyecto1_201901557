@@ -1,4 +1,4 @@
 digraph G {
 	rankdir=LR
-	S0 -> S1 [label="h"]	S1 -> S2 [label="Comilla simple"]	S2 [shape="doublecircle"]	S2 -> S2 [label="Comilla doble"]	S2 -> S2 [label="Salto de linea"]	S2 -> S2 [label="digito"]
+	S0 -> S1 [label="h"]	S1 -> S2 [label="Comilla simple"]	S2 [shape="doublecircle"]	S2 -> S2 [label="Salto de linea"]	S2 -> S2 [label="digito"]	S2 -> S2 [label="Comilla doble"]
 }
