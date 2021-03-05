@@ -123,7 +123,120 @@ public class Grafo {
         }
         
         return dotArbol;
-    } 
+    }
+    
+    public void generarAFN() {
+        String dotArbol = "digraph G {\n\trankdir=LR\n\t0\n\t0 -> 1 [label=\"ϵ\"]"; // Se declara el nodo 0
+        dotArbol += graficarThompson(expresion.getRaizArbol(), expresion.getRaizArbol().getTipo());
+        dotArbol += "\n}";
+        
+        try {
+            String pathGrafo = System.getProperty("user.dir") + "/archivos/ARBOLES_201901557/";
+            String nombreGrafo = expresion.getNombreExpresion();
+            
+            // Guardar .dot           
+            File crearDOT = new File(pathGrafo + nombreGrafo + ".dot");      
+            FileWriter writer;
+            writer = new FileWriter(pathGrafo + nombreGrafo + ".dot");
+            writer.write(dotArbol);
+            writer.close();
+            
+            // Crear png
+            String[] cmd = {"dot", "-Tpng", pathGrafo + nombreGrafo + ".dot", "-o", pathGrafo + nombreGrafo + ".png"};
+            Runtime rt = Runtime.getRuntime();
+            rt.exec(cmd);   
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+    }
+    
+    int countThompson = 0; // Contador de nodos
+    public String graficarThompson(Nodo nodo, Tipo tipoAnterior) {
+        // Recursividad
+        String dotArbol = "";
+        
+        /*if (nodo.getIzquierdo() != null) {
+            dotArbol += graficarThompson(nodo.getIzquierdo(), nodo.getTipo());
+        }
+        
+        if (nodo.getDerecho() != null) {
+            dotArbol += graficarThompson(nodo.getDerecho(), nodo.getTipo());
+        }*/
+        
+        switch(nodo.getTipo()) {
+            // Casos hojas
+            case CARACTERESPECIAL:
+                char caracter = nodo.getLexema().charAt(0);
+                String salidaValor = "";
+                switch(nodo.getLexema()) {                  
+                    // Caracteres especiales
+                    case "\\n":
+                        salidaValor = "Salto de linea";
+                        break;
+                    case "\\\"":
+                        salidaValor = "Comilla doble";
+                        break;
+                    case "\\\'":           
+                        salidaValor = "Comilla simple";
+                        break;
+                }       
+                countThompson += 2;
+                dotArbol += "\n\t" + (countThompson-1) + " -> " + countThompson + " [label=\""+ nodo.getLexema() +"\"]";
+                break;
+            case CADENA: case CONJUNTO:
+                countThompson += 2;
+                dotArbol += "\n\t" + (countThompson-1) + " -> " + countThompson + " [label=\""+ nodo.getLexema() +"\"]";
+                break;
+            case ACEPTACION:
+                countThompson +=1;
+                dotArbol += "\n\t" + countThompson + " [shape=doublecircle]";
+                break;
+            case OR:
+                break;
+            case AND:
+                dotArbol += graficarThompson(nodo.getIzquierdo(), nodo.getTipo());
+                dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
+                dotArbol += graficarThompson(nodo.getDerecho(), nodo.getTipo());
+                break;
+            case ASTERISCO:
+                int auxInicioA;
+                countThompson++;
+                auxInicioA = countThompson;
+                dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
+                
+                dotArbol += graficarThompson(nodo.getIzquierdo(), nodo.getTipo());
+                dotArbol += "\n\t" + countThompson + " -> " + (countThompson-1) + " [label=\"ϵ\"]";
+                
+                dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
+                
+                dotArbol += "\n\t" + auxInicioA + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
+                countThompson++;
+                break;
+            case MAS:
+                countThompson++;
+                dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
+                
+                dotArbol += graficarThompson(nodo.getIzquierdo(), nodo.getTipo());
+                dotArbol += "\n\t" + countThompson + " -> " + (countThompson-1) + " [label=\"ϵ\"]";
+                
+                dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
+                countThompson++;
+                break;
+            case INTERROGACION:
+                int auxInicioI;
+                countThompson++;
+                auxInicioI = countThompson;
+                dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
+                dotArbol += graficarThompson(nodo.getIzquierdo(), nodo.getTipo());
+                dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
+                
+                dotArbol += "\n\t" + auxInicioI + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
+                countThompson++;
+                break;
+        }
+        
+        return dotArbol;
+    }
     
     public void generarTablaSiguientes() {
         String dotTable = "digraph T {\n" +

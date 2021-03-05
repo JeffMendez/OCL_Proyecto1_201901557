@@ -454,10 +454,11 @@ class CUP$Sintactico$actions {
         // Crear todos los graficos
         Grafo nuevosGrafos = new Grafo(nuevaExpReg);
         nuevosGrafos.generarGrafoArbol();
+        nuevosGrafos.generarAFN();
         nuevosGrafos.generarTablaSiguientes();
         nuevosGrafos.generarTablaTransiciones();
         nuevosGrafos.generarAFD();
-
+        
         System.out.println("Expresion regular: " + nombre_expr + " procesada");
         listaSiguientes.clear();
         contadorHojas = 1;
