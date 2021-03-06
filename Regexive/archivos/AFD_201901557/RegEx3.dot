@@ -1,4 +1,0 @@
-digraph G {
-	rankdir=LR
-	S0 -> S2 [label="estoesid" * | "_"]	S1 [shape="doublecircle"]	S2 -> S1 [label="letra"]	S2 -> S1 [label="digito"]
-}

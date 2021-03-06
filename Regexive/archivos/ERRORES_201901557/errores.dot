@@ -11,8 +11,7 @@ aHtmlTable [
       <td>Línea</td>
       <td>Columna</td>
    </tr>	<tr><td>1</td><td>Sintactico</td><td>}</td><td>19</td><td>17</td></tr>
-	<tr><td>2</td><td>Sintactico</td><td>-</td><td>37</td><td>12</td></tr>
-	<tr><td>3</td><td>Sintactico</td><td>-</td><td>48</td><td>13</td></tr>
+	<tr><td>2</td><td>Sintactico</td><td>-</td><td>48</td><td>13</td></tr>
 </table>
 
    >]; 

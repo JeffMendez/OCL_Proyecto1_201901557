@@ -1,0 +1,22 @@
+digraph G {
+	rankdir=LR
+	0
+	0 -> 1 [label="h"]
+	1 -> 2 [label="Comilla simple"]
+	2 -> 3 [label="ϵ"]
+	3 -> 4 [label="ϵ"]
+	4 -> 5 [label="Comilla doble"]
+	3 -> 6 [label="ϵ"]
+	6 -> 7 [label="ϵ"]
+	7 -> 8 [label="Salto de linea"]
+	6 -> 9 [label="ϵ"]
+	9 -> 10 [label="digito"]
+	8 -> 11 [label="ϵ"]
+	10 -> 11 [label="ϵ"]
+	5 -> 12 [label="ϵ"]
+	11 -> 12 [label="ϵ"]
+	12 -> 13 [label="ϵ"]
+	12 -> 3 [label="ϵ"]
+	2 -> 13 [label="ϵ"]
+	13 [shape=doublecircle]
+}

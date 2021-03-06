@@ -120,6 +120,9 @@ public class Menu extends javax.swing.JFrame {
             case "Automatas":
                 pathImages += "AFD_201901557/";
                 break;
+            case "Thompson":
+                pathImages += "AFND_201901557/";
+                break;
         }   
         visualizarGrafo(0);
         indexImg = 0;
@@ -311,7 +314,7 @@ public class Menu extends javax.swing.JFrame {
 
         jLabel7.setText("Visor de Imagenes:");
 
-        cmbImagenes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Arboles", "Siguientes", "Transiciones", "Automatas" }));
+        cmbImagenes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Arboles", "Siguientes", "Transiciones", "Automatas", "Thompson" }));
         cmbImagenes.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 cmbImagenesPropertyChange(evt);

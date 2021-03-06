@@ -1,25 +1,25 @@
 digraph G {
-1670847624 [shape=record label="[1] |{ false | h | 1 }| [1]"];
-183780960 [shape=record label="[2] |{ false | Comilla simple | 2 }| [2]"];
-1638821688 [shape=record label="[3] |{ false | Comilla doble | 3 }| [3]"];
-1473997652 [shape=record label="[4] |{ false | Salto de linea | 4 }| [4]"];
-217271931 [shape=record label="[5] |{ false | digito | 5 }| [5]"];
-605867715 [shape=record label="[4, 5] |{ false | OR | -- }| [4, 5]"];
-605867715 -> 1473997652
-605867715 -> 217271931
-920236759 [shape=record label="[3, 4, 5] |{ false | OR | -- }| [3, 4, 5]"];
-920236759 -> 1638821688
-920236759 -> 605867715
-987037331 [shape=record label="[3, 4, 5] |{ true | * | -- }| [3, 4, 5]"];
-987037331 -> 920236759
-750976804 [shape=record label="[2] |{ false | . | -- }| [2, 3, 4, 5]"];
-750976804 -> 183780960
-750976804 -> 987037331
-1852458665 [shape=record label="[1] |{ false | . | -- }| [2, 3, 4, 5]"];
-1852458665 -> 1670847624
-1852458665 -> 750976804
-366878393 [shape=record label="[6] |{ false | # | 6 }| [6]"];
-149117687 [shape=record label="[1] |{ false | . | -- }| [6]"];
-149117687 -> 1852458665
-149117687 -> 366878393
+1571569167 [shape=record label="[1] |{ false | h | 1 }| [1]"];
+666696567 [shape=record label="[2] |{ false | Comilla simple | 2 }| [2]"];
+37591892 [shape=record label="[3] |{ false | Comilla doble | 3 }| [3]"];
+920936180 [shape=record label="[4] |{ false | Salto de linea | 4 }| [4]"];
+176444001 [shape=record label="[5] |{ false | digito | 5 }| [5]"];
+1243834117 [shape=record label="[4, 5] |{ false | OR | -- }| [4, 5]"];
+1243834117 -> 920936180
+1243834117 -> 176444001
+615166510 [shape=record label="[3, 4, 5] |{ false | OR | -- }| [3, 4, 5]"];
+615166510 -> 37591892
+615166510 -> 1243834117
+808278961 [shape=record label="[3, 4, 5] |{ true | * | -- }| [3, 4, 5]"];
+808278961 -> 615166510
+412221583 [shape=record label="[2] |{ false | . | -- }| [2, 3, 4, 5]"];
+412221583 -> 666696567
+412221583 -> 808278961
+1238915031 [shape=record label="[1] |{ false | . | -- }| [2, 3, 4, 5]"];
+1238915031 -> 1571569167
+1238915031 -> 412221583
+949135104 [shape=record label="[6] |{ false | # | 6 }| [6]"];
+1656259440 [shape=record label="[1] |{ false | . | -- }| [6]"];
+1656259440 -> 1238915031
+1656259440 -> 949135104
 }

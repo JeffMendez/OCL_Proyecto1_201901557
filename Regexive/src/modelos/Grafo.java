@@ -126,12 +126,13 @@ public class Grafo {
     }
     
     public void generarAFN() {
-        String dotArbol = "digraph G {\n\trankdir=LR\n\t0\n\t0 -> 1 [label=\"ϵ\"]"; // Se declara el nodo 0
+        //String dotArbol = "digraph G {\n\trankdir=LR\n\t0\n\t0 -> 1 [label=\"ϵ\"]"; // Se declara el nodo 0
+        String dotArbol = "digraph G {\n\trankdir=LR\n\t0"; // Se declara el nodo 0
         dotArbol += graficarThompson(expresion.getRaizArbol(), expresion.getRaizArbol().getTipo());
         dotArbol += "\n}";
         
         try {
-            String pathGrafo = System.getProperty("user.dir") + "/archivos/ARBOLES_201901557/";
+            String pathGrafo = System.getProperty("user.dir") + "/archivos/AFND_201901557/";
             String nombreGrafo = expresion.getNombreExpresion();
             
             // Guardar .dot           
@@ -155,14 +156,6 @@ public class Grafo {
         // Recursividad
         String dotArbol = "";
         
-        /*if (nodo.getIzquierdo() != null) {
-            dotArbol += graficarThompson(nodo.getIzquierdo(), nodo.getTipo());
-        }
-        
-        if (nodo.getDerecho() != null) {
-            dotArbol += graficarThompson(nodo.getDerecho(), nodo.getTipo());
-        }*/
-        
         switch(nodo.getTipo()) {
             // Casos hojas
             case CARACTERESPECIAL:
@@ -180,58 +173,102 @@ public class Grafo {
                         salidaValor = "Comilla simple";
                         break;
                 }       
-                countThompson += 2;
-                dotArbol += "\n\t" + (countThompson-1) + " -> " + countThompson + " [label=\""+ nodo.getLexema() +"\"]";
+                
+                if (tipoAnterior != Tipo.AND) {
+                    countThompson += 2;
+                    dotArbol += "\n\t" + (countThompson-1) + " -> " + countThompson + " [label=\""+ salidaValor +"\"]";
+                } else {
+                    countThompson++;
+                    dotArbol += "\n\t" + (countThompson-1) + " -> " + countThompson + " [label=\""+ salidaValor +"\"]";
+                }
                 break;
             case CADENA: case CONJUNTO:
-                countThompson += 2;
-                dotArbol += "\n\t" + (countThompson-1) + " -> " + countThompson + " [label=\""+ nodo.getLexema() +"\"]";
+                if (tipoAnterior != Tipo.AND) {
+                    countThompson += 2;
+                    dotArbol += "\n\t" + (countThompson-1) + " -> " + countThompson + " [label=\""+ nodo.getLexema() +"\"]";
+                } else {
+                    countThompson++;
+                    dotArbol += "\n\t" + (countThompson-1) + " -> " + countThompson + " [label=\""+ nodo.getLexema() +"\"]";
+                }
+                //countThompson += 2;
+                //dotArbol += "\n\t" + (countThompson-1) + " -> " + countThompson + " [label=\""+ nodo.getLexema() +"\"]";
                 break;
             case ACEPTACION:
-                countThompson +=1;
                 dotArbol += "\n\t" + countThompson + " [shape=doublecircle]";
+                //dotArbol += "\n\t" + (countThompson-1) + " -> " + countThompson + " [label=\"ϵ\"]";
                 break;
             case OR:
+                int auxInicioOr;
+                int auxFinalUno;
+                int auxFinalDos;
+                
+                countThompson++;
+                
+                auxInicioOr = countThompson;
+                dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
+                dotArbol += graficarThompson(nodo.getIzquierdo(), nodo.getTipo());
+                auxFinalUno = countThompson;
+                
+                dotArbol += "\n\t" + auxInicioOr + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
+                dotArbol += graficarThompson(nodo.getDerecho(), nodo.getTipo());
+                auxFinalDos = countThompson;
+                
+                countThompson++;
+                dotArbol += "\n\t" + auxFinalUno + " -> " + countThompson + " [label=\"ϵ\"]";
+                dotArbol += "\n\t" + auxFinalDos + " -> " + countThompson + " [label=\"ϵ\"]";
                 break;
             case AND:
                 dotArbol += graficarThompson(nodo.getIzquierdo(), nodo.getTipo());
-                dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
                 dotArbol += graficarThompson(nodo.getDerecho(), nodo.getTipo());
+                
+                /*Tipo tipoSiguiente = nodo.getDerecho().getTipo();
+                if (tipoSiguiente != Tipo.AND) {
+                    dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
+                }*/         
                 break;
             case ASTERISCO:
                 int auxInicioA;
-                countThompson++;
+                //countThompson++;
                 auxInicioA = countThompson;
-                dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
                 
+                // Conexion a proximo grafo
+                dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
                 dotArbol += graficarThompson(nodo.getIzquierdo(), nodo.getTipo());
-                dotArbol += "\n\t" + countThompson + " -> " + (countThompson-1) + " [label=\"ϵ\"]";
-                
                 dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
                 
+                // Pueden ser mas por lo cual conexion de regreso a expresion 
+                dotArbol += "\n\t" + countThompson + " -> " + (auxInicioA+1) + " [label=\"ϵ\"]";              
+                // Se cancela por lo cual conexion principio a fin    
                 dotArbol += "\n\t" + auxInicioA + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
-                countThompson++;
+                countThompson++;                      
                 break;
             case MAS:
-                countThompson++;
+                int auxInicioM;
+                //countThompson++;
+                auxInicioM = countThompson;
+
+                // Conexion a proximo grafo
                 dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
-                
                 dotArbol += graficarThompson(nodo.getIzquierdo(), nodo.getTipo());
-                dotArbol += "\n\t" + countThompson + " -> " + (countThompson-1) + " [label=\"ϵ\"]";
-                
                 dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
-                countThompson++;
+                          
+                // Pueden ser mas por lo cual conexion de regreso a expresion 
+                dotArbol += "\n\t" + countThompson + " -> " + (auxInicioM+1) + " [label=\"ϵ\"]";
+                countThompson++; 
                 break;
             case INTERROGACION:
                 int auxInicioI;
-                countThompson++;
+                //countThompson++;
                 auxInicioI = countThompson;
+
+                // Conexion a proximo grafo
                 dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
                 dotArbol += graficarThompson(nodo.getIzquierdo(), nodo.getTipo());
                 dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
-                
+                            
+                // Se cancela por lo cual conexion principio a fin    
                 dotArbol += "\n\t" + auxInicioI + " -> " + (countThompson+1) + " [label=\"ϵ\"]";
-                countThompson++;
+                countThompson++;                      
                 break;
         }
         
