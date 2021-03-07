@@ -202,7 +202,9 @@ public class Grafo {
                 int auxFinalUno;
                 int auxFinalDos;
                 
-                countThompson++;
+                if (tipoAnterior != Tipo.AND) {
+                    countThompson++;
+                }
                 
                 auxInicioOr = countThompson;
                 dotArbol += "\n\t" + countThompson + " -> " + (countThompson+1) + " [label=\"ϵ\"]";

@@ -6,6 +6,7 @@
 package vistas;
 
 import analizadores.Lexico;
+import static analizadores.Lexico.listaErrores;
 import analizadores.Sintactico;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +24,10 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
 import modelos.ErrorFile;
 import modelos.ExpresionEvaluar;
 import modelos.ExpresionRegular;
@@ -142,14 +147,58 @@ public class Menu extends javax.swing.JFrame {
     
     public void llenarListas() {
         String[] nombresExpr = new String[sintactico.listaExpresiones.size()];
+        
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Archivos");     
+        // Carpetas
+        DefaultMutableTreeNode arbolesNodo = new DefaultMutableTreeNode("Arboles");
+        DefaultMutableTreeNode afdNodo = new DefaultMutableTreeNode("AFD");
+        DefaultMutableTreeNode afnNodo = new DefaultMutableTreeNode("AFND");
+        DefaultMutableTreeNode siguientesNodo = new DefaultMutableTreeNode("Siguientes");
+        DefaultMutableTreeNode transicionesNodo = new DefaultMutableTreeNode("Transiciones");
+        
+        
         for(int i=0; i<sintactico.listaExpresiones.size(); i++) {
             nombresExpr[i] = sintactico.listaExpresiones.get(i).getNombreExpresion();
+            
+            arbolesNodo.add(new DefaultMutableTreeNode(sintactico.listaExpresiones.get(i).getNombreExpresion()));
+            afdNodo.add(new DefaultMutableTreeNode(sintactico.listaExpresiones.get(i).getNombreExpresion()));
+            afnNodo.add(new DefaultMutableTreeNode(sintactico.listaExpresiones.get(i).getNombreExpresion()));
+            siguientesNodo.add(new DefaultMutableTreeNode(sintactico.listaExpresiones.get(i).getNombreExpresion()));
+            transicionesNodo.add(new DefaultMutableTreeNode(sintactico.listaExpresiones.get(i).getNombreExpresion()));
         }
         
-        listArboles.setListData(nombresExpr);
-        listAutomatas.setListData(nombresExpr);
-        listSiguientes.setListData(nombresExpr);
-        listTransiciones.setListData(nombresExpr);
+        root.add(arbolesNodo);
+        root.add(afdNodo);
+        root.add(afnNodo);
+        root.add(siguientesNodo);
+        root.add(transicionesNodo);
+        
+        DefaultTreeModel model = (DefaultTreeModel) treeArchivos.getModel();
+        model.setRoot(root);
+        model.reload();
+    }
+    
+    public void vaciarDatos() {
+        sintactico.listaExpEvaluar.clear();
+        sintactico.listaExpresiones.clear();
+        sintactico.listaConjuntos.clear();
+        sintactico.listaErrores.clear();
+        lexico.listaErrores.clear();
+        
+        labelImage.setIcon(null);
+        txtExpNombre.setText("");
+    
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Archivos");     
+        // Carpetas
+        DefaultMutableTreeNode arbolesNodo = new DefaultMutableTreeNode("Arboles");
+        DefaultMutableTreeNode afdNodo = new DefaultMutableTreeNode("AFD");
+        DefaultMutableTreeNode afnNodo = new DefaultMutableTreeNode("AFND");
+        DefaultMutableTreeNode siguientesNodo = new DefaultMutableTreeNode("Siguientes");
+        DefaultMutableTreeNode transicionesNodo = new DefaultMutableTreeNode("Transiciones");
+        
+        DefaultTreeModel model = (DefaultTreeModel) treeArchivos.getModel();
+        model.setRoot(root);
+        model.reload();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -169,18 +218,8 @@ public class Menu extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         txtCMD = new javax.swing.JTextArea();
         jPanel1 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        listArboles = new javax.swing.JList<>();
-        jLabel4 = new javax.swing.JLabel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        listSiguientes = new javax.swing.JList<>();
-        jLabel5 = new javax.swing.JLabel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        listTransiciones = new javax.swing.JList<>();
-        jLabel6 = new javax.swing.JLabel();
-        jScrollPane6 = new javax.swing.JScrollPane();
-        listAutomatas = new javax.swing.JList<>();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        treeArchivos = new javax.swing.JTree();
         jLabel7 = new javax.swing.JLabel();
         cmbImagenes = new javax.swing.JComboBox<>();
         jScrollPane7 = new javax.swing.JScrollPane();
@@ -228,46 +267,29 @@ public class Menu extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel3.setText("-> Arboles");
-
-        listArboles.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Sin elementos" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        listArboles.setToolTipText("");
-        listArboles.setEnabled(false);
-        jScrollPane3.setViewportView(listArboles);
-
-        jLabel4.setText("-> Tabla de Siguientes");
-
-        listSiguientes.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Sin elementos" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        listSiguientes.setEnabled(false);
-        jScrollPane4.setViewportView(listSiguientes);
-
-        jLabel5.setText("-> Tabla de Transiciones");
-
-        listTransiciones.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Sin elementos" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        listTransiciones.setEnabled(false);
-        jScrollPane5.setViewportView(listTransiciones);
-
-        jLabel6.setText("-> Automatas");
-
-        listAutomatas.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Sin elementos" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        listAutomatas.setEnabled(false);
-        jScrollPane6.setViewportView(listAutomatas);
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Archivos");
+        javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Arboles");
+        javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("-");
+        treeNode2.add(treeNode3);
+        treeNode1.add(treeNode2);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("AFD");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("-");
+        treeNode2.add(treeNode3);
+        treeNode1.add(treeNode2);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("AFND");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("-");
+        treeNode2.add(treeNode3);
+        treeNode1.add(treeNode2);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Siguientes");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("-");
+        treeNode2.add(treeNode3);
+        treeNode1.add(treeNode2);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Transiciones");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("-");
+        treeNode2.add(treeNode3);
+        treeNode1.add(treeNode2);
+        treeArchivos.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        jScrollPane8.setViewportView(treeArchivos);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -275,41 +297,15 @@ public class Menu extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3)
-                    .addComponent(jScrollPane4)
-                    .addComponent(jScrollPane5)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel5))
-                            .addComponent(jLabel6))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane6))
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jLabel7.setText("Visor de Imagenes:");
@@ -493,6 +489,8 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAnalizarActionPerformed
 
     private void btnGenerarAutomataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarAutomataActionPerformed
+        vaciarDatos();
+        
         try {
             System.out.println("Inicio analisis.....");
             String entrada = txtEntrada.getText();
@@ -544,6 +542,7 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAnteriorActionPerformed
 
     private void btnNuevoArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoArchivoActionPerformed
+        vaciarDatos();
         String numRandom = String.valueOf(new Random().nextInt(100));
         pathArchivo = System.getProperty("user.dir") + "/archivos/";
         nombreArchivo = "newRegex" + numRandom + ".olc";
@@ -551,6 +550,7 @@ public class Menu extends javax.swing.JFrame {
         try {
             if (nuevoArchivo.createNewFile()) {
                 txtEntrada.setEditable(true);
+                txtEntrada.setText("");
                 this.setTitle("Regexive - " + nombreArchivo);
                 JOptionPane.showMessageDialog(null, "Archivo creado:  " + nombreArchivo + "\nSe habilito la entrada de texto");
             } else {
@@ -604,6 +604,8 @@ public class Menu extends javax.swing.JFrame {
         
         if(fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
             try {
+                vaciarDatos();
+                
                 File archivo =  fileChooser.getSelectedFile();
                 
                 Scanner myReader = new Scanner(archivo);
@@ -651,26 +653,16 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cmbImagenes;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JLabel labelImage;
-    private javax.swing.JList<String> listArboles;
-    private javax.swing.JList<String> listAutomatas;
-    private javax.swing.JList<String> listSiguientes;
-    private javax.swing.JList<String> listTransiciones;
+    private javax.swing.JTree treeArchivos;
     private javax.swing.JTextArea txtCMD;
     private javax.swing.JTextArea txtEntrada;
     private javax.swing.JLabel txtExpNombre;
